@@ -14,10 +14,12 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/textView"/>
-    <Button
+    <ToggleButton
+            android:id="@+id/togglebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"/>
+            android:textOn="Inside Geofence"
+            android:textOff="Outside Geofence"
+            android:onClick="toggleChange" android:longClickable="false"/>
 </LinearLayout>
 
