@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.location.*;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
@@ -33,20 +31,26 @@ public class CallHelper implements LocationListener {
 		LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 		boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-		
+
+
+//        Criteria criteria = new Criteria();
+//        String provider = locationManager.getBestProvider(criteria, false);
+//        location = locationManager.getLastKnownLocation(provider);
+//        return location;
+
 		if (isGPSEnabled) {
 			Log.d("gps","gps is enabled");
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BETWEEN_UPDATE,MIN_DISTANCE_BETWEEN_UPDATE, this);
 				if (locationManager != null) {
 					location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 				}
-			
+
 		}
 		else if(isNetworkEnabled){
 			Log.d("network","network is enabled");
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_BETWEEN_UPDATE,MIN_DISTANCE_BETWEEN_UPDATE, this);
 			if (locationManager != null) {
-				location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			}
 		}
 		return location;
@@ -67,19 +71,21 @@ public class CallHelper implements LocationListener {
             		callReceived = true;
             		break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                	if (callRinged && !callReceived) {
+                	if (callRinged && !callReceived && phoneNumber.equals("+919962901373")) {
 	                    SmsManager smsManager = SmsManager.getDefault();
 	                    Location location = getLocation();
 	                    if(location!=null){
 	                    	Geocoder gcd = new Geocoder(context, Locale.getDefault());
 		                    try {
-		                        List<Address> address = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
-		                        if(address.size()>0) {
-		                            smsManager.sendTextMessage(phoneNumber, null, "Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0), null, null);
-		                        }
-		                        else{
-		                        	smsManager.sendTextMessage(phoneNumber, null, "Not able to pick the phone.", null, null);
-		                        }
+                                if(isConnectingToInternet()){
+                                    List<Address> address = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
+                                    if(address.size()>0) {
+                                        smsManager.sendTextMessage(phoneNumber, null, "Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nLat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n with location accuracy of " + location.getAccuracy(), null, null);
+                                    }
+                                }
+                                else{
+                                    smsManager.sendTextMessage(phoneNumber, null, "Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n with location accuracy of " + location.getAccuracy() + "\nAltitude: " + location.getAltitude() + "\nProvider: " + location.getProvider() + "\nSpeed: " + location.getSpeed(), null, null);
+                                }
 		                    } catch (IOException e) {
 		                        e.printStackTrace();
 		                    }
@@ -95,6 +101,22 @@ public class CallHelper implements LocationListener {
                 	}
                     break;
             }
+        }
+
+        public boolean isConnectingToInternet(){
+            ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null)
+            {
+                NetworkInfo[] info = connectivity.getAllNetworkInfo();
+                if (info != null)
+                    for (int i = 0; i < info.length; i++)
+                        if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                        {
+                            return true;
+                        }
+
+            }
+            return false;
         }
     }
 
