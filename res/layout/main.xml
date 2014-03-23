@@ -4,22 +4,23 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World, MyActivity"
-            />
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/textView"/>
-    <ToggleButton
+<!--     <ToggleButton
             android:id="@+id/togglebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOn="Inside Geofence"
             android:textOff="Outside Geofence"
-            android:onClick="toggleChange" android:longClickable="false"/>
+            android:onClick="toggleChange" android:longClickable="false"/> -->
+    <Button
+        android:id="@+id/pickcontact"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick Contact" />
+    <ListView
+		android:id="@android:id/list"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Hello Lists" >
+	</ListView>
 </LinearLayout>
 

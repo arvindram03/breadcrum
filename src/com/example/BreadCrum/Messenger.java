@@ -32,12 +32,12 @@ public class Messenger implements LocationListener {
                 if(isConnectingToInternet()){
                     List<Address> address = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
                     if(address.size()>0) {
-                        ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nLat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n with location accuracy of " + location.getAccuracy() +"\nAltitude: " + location.getAltitude() + "\nProvider: " + location.getProvider() + "\nSpeed: " + location.getSpeed() +  "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
+                        ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nProvider: " + location.getProvider() +"\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
                         smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                     }
                 }
                 else{
-                    ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n with location accuracy of " + location.getAccuracy() + "\nAltitude: " + location.getAltitude() + "\nProvider: " + location.getProvider() + "\nSpeed: " + location.getSpeed() + "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
+                    ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
                     smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                 }
             } catch (IOException e) {
