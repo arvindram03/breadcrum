@@ -21,6 +21,7 @@
         </activity>
         <service
                 android:name=".CallListeningService"
+                android:process=":call_listening_process"
                 android:enabled="true"
                 android:exported="false" >
         </service>

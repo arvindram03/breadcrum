@@ -14,9 +14,9 @@ public class CallListeningService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         callHelper = new CallHelper(this);
 
-        int res = super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
         callHelper.start();
-        return res;
+        return Service.START_STICKY;
     }
 
     @Override
