@@ -15,7 +15,6 @@ import android.widget.Toast;
 public class MyActivity extends ListActivity {
 
     private static final int RQS_PICK_CONTACT = 1;
-	private Intent intent;
     private SimpleCursorAdapter adapter;
 
     @Override
@@ -24,7 +23,6 @@ public class MyActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        initiateListeningService();
         listAddedContacts();
         
         Button buttonPickContact = (Button)findViewById(R.id.pickcontact);
@@ -48,12 +46,6 @@ public class MyActivity extends ListActivity {
         adapter = new SimpleCursorAdapter(this, R.layout.contact_list, cursor, columns, to);
 		setListAdapter(adapter);
 		
-	}
-
-	private void initiateListeningService() {
-
-        intent = new Intent(this, CallListeningService.class);
-        startService(intent);
 	}
 
 	@Override
@@ -83,19 +75,4 @@ public class MyActivity extends ListActivity {
 			     }
 	   		}
 	}
-//    public void toggleChange(View view){
-//        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.togglebutton);
-//        if(toggleButton.getText().equals("Inside Geofence")){
-//            stopService(intent);
-//            countDownTimer.cancel();
-//        }else{
-//            startService(intent);
-//            countDownTimer.start();
-//        }
-//        Toast.makeText(MyActivity.this,toggleButton.getText(), Toast.LENGTH_SHORT).show();
-//    }
-
-
-
-
 }

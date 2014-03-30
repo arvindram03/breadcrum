@@ -19,11 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service
-                android:name=".CallListeningService"
-                android:process=":call_listening_process"
-                android:enabled="true"
-                android:exported="false" >
-        </service>
+        <receiver android:name=".IncomingCallReceiver" android:enabled="true"> 
+            <intent-filter>
+                                     <action android:name="android.intent.action.PHONE_STATE" /> 
+                </intent-filter>
+           </receiver>
     </application>
 </manifest>
