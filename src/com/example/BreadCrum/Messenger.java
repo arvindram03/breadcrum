@@ -1,30 +1,32 @@
 package com.example.BreadCrum;
 
-import android.content.Context;
-import android.location.*;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.telephony.SmsManager;
+import helpers.LocationHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Messenger implements LocationListener {
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.SmsManager;
 
-    public static final long MIN_TIME_BETWEEN_UPDATE = 0l;
-    public static final long MIN_DISTANCE_BETWEEN_UPDATE = 0l;
+public class Messenger {
+
     private Context context;
-
+    private LocationHelper locationHelper;
     public Messenger(Context context){
         this.context = context;
+        this.locationHelper = new LocationHelper(context);
     }
 
     public void sendMessage(String phoneNumber) {
         SmsManager smsManager = SmsManager.getDefault();
-        Location location = getLocation();
+        Location location = locationHelper.getLocation();
         if(location!=null){
             Geocoder gcd = new Geocoder(context, Locale.getDefault());
             try {
@@ -62,54 +64,5 @@ public class Messenger implements LocationListener {
 
         }
         return false;
-    }
-
-
-    private Location getLocation() {
-        Location location=null;
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        
-        if(isNetworkEnabled){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_BETWEEN_UPDATE,MIN_DISTANCE_BETWEEN_UPDATE, this);
-            if (locationManager != null) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            }
-        }
-        else if (isGPSEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BETWEEN_UPDATE,MIN_DISTANCE_BETWEEN_UPDATE, this);
-            if (locationManager != null) {
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
-
-        }
-        
-        return location;
-
-    }
-
-    @Override
-    public void onLocationChanged(Location arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderDisabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        // TODO Auto-generated method stub
-
     }
 }

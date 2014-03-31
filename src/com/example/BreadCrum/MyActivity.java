@@ -1,14 +1,25 @@
 package com.example.BreadCrum;
 
+import helpers.DataStoreHelper;
+import helpers.LocationHelper;
 import models.Contact;
+import models.LocationTag;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
@@ -21,58 +32,67 @@ public class MyActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        listAddedContacts();
-        
-        Button buttonPickContact = (Button)findViewById(R.id.pickcontact);
-        buttonPickContact.setOnClickListener(new Button.OnClickListener(){
-
-	        @Override
-	         public void onClick(View arg0) {
-	
-	        	Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-	        	intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-	        	startActivityForResult(intent, 1);             
-	         }
-        });
+        setContentView(R.layout.home);
+        EditText locationTag = (EditText) findViewById(R.id.location_tag);
+        Button saveLocation = (Button) findViewById(R.id.save_location);
+        listAddedLocationTags();
 	}
-	
-	private void listAddedContacts() {
-		DataStoreHelper dataStoreHelper = new DataStoreHelper(this);
-		Cursor cursor = dataStoreHelper.getAllContactsAdapter();
-		String[] columns = new String[] { DataStoreHelper.KEY_NAME, DataStoreHelper.KEY_PH_NO };
-        int[] to = new int[] { R.id.contact_name, R.id.phone_number };
-        adapter = new SimpleCursorAdapter(this, R.layout.contact_list, cursor, columns, to);
+    
+    private void listAddedLocationTags() {
+    	DataStoreHelper dataStoreHelper = new DataStoreHelper(this);
+		Cursor cursor = dataStoreHelper.getAllLocationTagsAdapter();
+		String[] columns = new String[] { DataStoreHelper.KEY_DESCRIPTION };
+        int[] to = new int[] { R.id.location_description };
+        adapter = new SimpleCursorAdapter(this, R.layout.location_tag_list, cursor, columns, to);
 		setListAdapter(adapter);
 		
 	}
 
-	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
-		super.onActivityResult(requestCode, resultCode, data);
+	public void addLocationTag(View view){
+    	EditText locationTagText = (EditText) findViewById(R.id.location_tag);
+    	String description = locationTagText.getText().toString();
+    	if(!description.equals("")) {
+	    	LocationHelper locationHelper = new LocationHelper(MyActivity.this);
+	    	Location location = locationHelper.getLocation(); 
+	    	
+	    	DataStoreHelper dataStoreHelper = new DataStoreHelper(MyActivity.this);
+	    	LocationTag locationTag = new LocationTag(description, location.getLatitude(), location.getLongitude());
+	    	
+	    	if(!dataStoreHelper.addLocationTag(locationTag)){
+		    	  Toast.makeText(MyActivity.this,"Location description Already Added", Toast.LENGTH_SHORT).show();
+		      }
+		      else{
+		    	  Cursor cursor = dataStoreHelper.getAllLocationTagsAdapter(); 
+		    	  adapter.changeCursor(cursor);
+		    	  locationTagText.setText("");
+		      } 
+    	}
+    	
+    	
+    }
+    
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+      MenuInflater inflater = getMenuInflater();
+      inflater.inflate(R.menu.action_list, menu);
+      return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	Intent intent;
+      switch (item.getItemId()) {
+      
+      case R.id.contact_list:
+    	intent = new Intent(this, ContactsActivity.class);
+    	startActivity(intent);
+        break;
+      }
 
-	   if(requestCode == RQS_PICK_CONTACT) {
-		   if(resultCode == RESULT_OK) {
-			   
-			    Uri contactData = data.getData();
-			    Cursor cursor =  managedQuery(contactData, null, null, null, null);
-			    cursor.moveToFirst();
-			
-			      String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-			      String name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-			      phoneNumber = phoneNumber.replaceAll(" ", "");
-			      Contact newContact = new Contact(name,phoneNumber);
-			      DataStoreHelper dataStoreHelper = new DataStoreHelper(this);
-			      if(!dataStoreHelper.addContact(newContact)){
-			    	  Toast.makeText(MyActivity.this,"Contact Already Added", Toast.LENGTH_SHORT).show();
-			      }
-			      else{
-			    	  cursor = dataStoreHelper.getAllContactsAdapter();
-			    	  adapter.changeCursor(cursor);
-			      } 
-			     }
-	   		}
-	}
+      return true;
+    } 
+	
+
+	
 }
