@@ -1,11 +1,15 @@
 package com.example.BreadCrum;
 
+import helpers.DataStoreHelper;
 import helpers.LocationHelper;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import models.MessageLog;
 
 import android.content.Context;
 import android.location.Address;
@@ -19,12 +23,15 @@ public class Messenger {
 
     private Context context;
     private LocationHelper locationHelper;
+    private DataStoreHelper dataStoreHelper;
     public Messenger(Context context){
         this.context = context;
         this.locationHelper = new LocationHelper(context);
+        this.dataStoreHelper = new DataStoreHelper(context);
     }
 
     public void sendMessage(String phoneNumber) {
+    	String content = "";
         SmsManager smsManager = SmsManager.getDefault();
         Location location = locationHelper.getLocation();
         if(location!=null){
@@ -33,12 +40,14 @@ public class Messenger {
                 if(isConnectingToInternet()){
                     List<Address> address = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
                     if(address.size()>0) {
-                        ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nProvider: " + location.getProvider() +"\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
+                    	content = "Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nProvider: " + location.getProvider() +"\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
+                        ArrayList<String> message = smsManager.divideMessage(content);
                         smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                     }
                 }
                 else{
-                    ArrayList<String> message = smsManager.divideMessage("Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude());
+                	content = "Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
+                    ArrayList<String> message = smsManager.divideMessage(content);
                     smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                 }
             } catch (IOException e) {
@@ -48,6 +57,10 @@ public class Messenger {
         else{
             smsManager.sendTextMessage(phoneNumber, null, "Not able to pick the phone.", null, null);
         }
+        java.util.Date now = new java.util.Date();
+        MessageLog messageLog = new MessageLog("",phoneNumber,content, new Date(now.getTime()));
+        dataStoreHelper.addMessageLog(messageLog);
+        
     }
 
     private boolean isConnectingToInternet(){

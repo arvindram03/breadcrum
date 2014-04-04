@@ -1,20 +1,19 @@
 package helpers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import models.Contact;
 import models.LocationTag;
+import models.MessageLog;
  
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
-import android.text.Editable;
-import android.util.Log;
 
  
 public class DataStoreHelper extends SQLiteOpenHelper {
@@ -34,6 +33,16 @@ public class DataStoreHelper extends SQLiteOpenHelper {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
+
+	private static final String TABLE_MESSAGE_LOGS = "message_logs";
+
+	public static final String KEY_RECEIVER_NAME = "receiver_name";
+
+	public static final String KEY_RECEIVER_PHONE = "receiver_phone_number";
+
+	public static final String KEY_CONTENT = "content";
+
+	public static final String KEY_TIMESTAMP = "timestamp";
     
     public DataStoreHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,8 +50,6 @@ public class DataStoreHelper extends SQLiteOpenHelper {
  
     @Override
     public void onCreate(SQLiteDatabase db) {
-    	db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION_TAGS);
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_PH_NO + " TEXT" + ")";
@@ -51,16 +58,21 @@ public class DataStoreHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DESCRIPTION + " TEXT,"
                 + KEY_LATITUDE + " TEXT," + KEY_LONGITUDE + " TEXT" + ")";
         
+        String CREATE_MESSAGE_LOGS_TABLE = "CREATE TABLE " + TABLE_MESSAGE_LOGS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_RECEIVER_NAME + " TEXT,"
+                + KEY_RECEIVER_PHONE + " TEXT," + KEY_CONTENT + " TEXT,"
+                + KEY_TIMESTAMP + " TEXT"+ ")";
         
         db.execSQL(CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_LOCATION_TAGS_TABLE);
+        db.execSQL(CREATE_MESSAGE_LOGS_TABLE);
     }
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION_TAGS);
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION_TAGS);
+        //onCreate(db);
     }
  
     public boolean addContact(Contact contact) {
@@ -183,6 +195,29 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	public Cursor getAllLocationTagsAdapter() {
 		String selectQuery = "SELECT  * FROM " + TABLE_LOCATION_TAGS;
+		 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+		return cursor;
+
+	}
+
+	public void addMessageLog(MessageLog messageLog) {
+		SQLiteDatabase db = this.getWritableDatabase();
+	    
+	    ContentValues values = new ContentValues();
+	    values.put(KEY_RECEIVER_NAME, messageLog.getReceiverName()); 
+	    values.put(KEY_RECEIVER_PHONE, messageLog.getReceiverPhoneNumber());
+	    values.put(KEY_CONTENT, messageLog.getContent());
+	    
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	    values.put(KEY_TIMESTAMP, dateFormat.format(messageLog.getTimestamp()));
+	    db.insert(TABLE_MESSAGE_LOGS, null, values);
+	    db.close();
+	}
+	
+	public Cursor getAllMessageLogsAdapter() {
+		String selectQuery = "SELECT  * FROM " + TABLE_MESSAGE_LOGS;
 		 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
