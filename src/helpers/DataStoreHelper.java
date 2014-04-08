@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.android.gms.location.Geofence;
+
 import models.Contact;
-import models.LocationTag;
+import models.SimpleGeofence;
 import models.MessageLog;
  
 import android.content.ContentValues;
@@ -24,15 +26,18 @@ public class DataStoreHelper extends SQLiteOpenHelper {
  
     private static final String TABLE_CONTACTS = "contacts";
 
-    private static final String TABLE_LOCATION_TAGS = "location_tags";
+    private static final String TABLE_SIMPLE_GEOFENCES = "simple_geofences";
  
-    private static final String KEY_ID = "_id";
+    public static final String KEY_ID = "_id";
     public static final String KEY_NAME = "name";
     public static final String KEY_PH_NO = "phone_number";
  
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_RADIUS = "radius";
+    public static final String KEY_EXPIRATION_DURATION = "expiration_duration";
+    public static final String KEY_TRANSITION_TYPE = "transition_type";
 
 	private static final String TABLE_MESSAGE_LOGS = "message_logs";
 
@@ -54,9 +59,11 @@ public class DataStoreHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_PH_NO + " TEXT" + ")";
         
-        String CREATE_LOCATION_TAGS_TABLE = "CREATE TABLE " + TABLE_LOCATION_TAGS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DESCRIPTION + " TEXT,"
-                + KEY_LATITUDE + " TEXT," + KEY_LONGITUDE + " TEXT" + ")";
+        String CREATE_LOCATION_TAGS_TABLE = "CREATE TABLE " + TABLE_SIMPLE_GEOFENCES + "("
+                + KEY_ID + " TEXT PRIMARY KEY,"
+                + KEY_LATITUDE + " REAL," + KEY_LONGITUDE + " REAL,"
+                + KEY_RADIUS + " REAL," + KEY_EXPIRATION_DURATION + " INTEGER,"
+                + KEY_TRANSITION_TYPE + " INTEGER" + ")";
         
         String CREATE_MESSAGE_LOGS_TABLE = "CREATE TABLE " + TABLE_MESSAGE_LOGS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_RECEIVER_NAME + " TEXT,"
@@ -121,7 +128,6 @@ public class DataStoreHelper extends SQLiteOpenHelper {
                 contactList.add(contact);
             } while (cursor.moveToNext());
         }
- 
         return contactList;
     }
  
@@ -132,8 +138,9 @@ public class DataStoreHelper extends SQLiteOpenHelper {
         values.put(KEY_NAME, contact.getName());
         values.put(KEY_PH_NO, contact.getPhoneNumber());
  
-        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
+        int result = db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(contact.getID()) });
+        return result;
     }
  
     public void deleteContact(Contact contact) {
@@ -149,7 +156,6 @@ public class DataStoreHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         cursor.close();
- 
         return cursor.getCount();
     }
 
@@ -161,40 +167,40 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		return cursor;
 	}
 
-	public boolean addLocationTag(LocationTag locationTag) {
-		if(getLocationTag(locationTag.getDescription())!=null)
+	public boolean addSimpleGeofence(SimpleGeofence geofence) {
+		if(getSimpleGeofence(geofence.getId())!=null)
         	return false;
     	SQLiteDatabase db = this.getWritableDatabase();
         
         ContentValues values = new ContentValues();
-        values.put(KEY_DESCRIPTION, locationTag.getDescription()); 
-        values.put(KEY_LATITUDE, locationTag.getLatitude());
-        values.put(KEY_LONGITUDE, locationTag.getLongitude()); 
-        db.insert(TABLE_LOCATION_TAGS, null, values);
-        db.close();
+        values.put(KEY_ID, geofence.getId()); 
+        values.put(KEY_LATITUDE, geofence.getLatitude());
+        values.put(KEY_LONGITUDE, geofence.getLongitude());
+        values.put(KEY_RADIUS, geofence.getRadius());
+        values.put(KEY_EXPIRATION_DURATION, geofence.getExpirationDuration());
+        values.put(KEY_TRANSITION_TYPE, geofence.getTransitionType());
+        db.insert(TABLE_SIMPLE_GEOFENCES, null, values);
         return true;
 		
 	}
 
-	private Object getLocationTag(String description) {
+	private SimpleGeofence getSimpleGeofence(String description) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		description = description.toLowerCase(Locale.getDefault()); 
-        Cursor cursor = db.query(TABLE_LOCATION_TAGS, new String[] { KEY_ID,
-                KEY_DESCRIPTION, KEY_LATITUDE, KEY_LONGITUDE }, KEY_DESCRIPTION + "=?",
+        Cursor cursor = db.query(TABLE_SIMPLE_GEOFENCES, new String[] {
+                KEY_ID, KEY_LATITUDE, KEY_LONGITUDE, KEY_RADIUS, KEY_EXPIRATION_DURATION, KEY_TRANSITION_TYPE }, KEY_ID + "=?",
                 new String[] { description }, null, null, null, null);
-        
         if (cursor.getCount() != 0) {
             cursor.moveToFirst();
-            Contact contact = new Contact(Integer.parseInt(cursor.getString(0)),
-            		cursor.getString(1), cursor.getString(2));
-            return contact;
+            SimpleGeofence simpleGeofence = new SimpleGeofence(cursor.getString(0),cursor.getDouble(1),cursor.getDouble(2),cursor.getFloat(3), cursor.getLong(4),cursor.getInt(5));
+            return simpleGeofence;
         }
         else
         	return null;
 	}
 
-	public Cursor getAllLocationTagsAdapter() {
-		String selectQuery = "SELECT  * FROM " + TABLE_LOCATION_TAGS;
+	public Cursor getAllSimpleGeofenceAdapter() {
+		String selectQuery = "SELECT  * FROM " + TABLE_SIMPLE_GEOFENCES;
 		 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -213,7 +219,6 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 	    values.put(KEY_TIMESTAMP, dateFormat.format(messageLog.getTimestamp()));
 	    db.insert(TABLE_MESSAGE_LOGS, null, values);
-	    db.close();
 	}
 	
 	public Cursor getAllMessageLogsAdapter() {
@@ -221,8 +226,23 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-		return cursor;
-
+        return cursor;
 	}
- 
+	
+	public List<Geofence> getAllGeofences(){
+	List<Geofence> geofenceList = new ArrayList<Geofence>();
+    String selectQuery = "SELECT  * FROM " + TABLE_SIMPLE_GEOFENCES;
+
+    SQLiteDatabase db = this.getWritableDatabase();
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+        do {
+        	SimpleGeofence simpleGeofence = new SimpleGeofence(cursor.getString(0),cursor.getDouble(1),cursor.getDouble(2),cursor.getFloat(3), cursor.getLong(4),cursor.getInt(5));
+            geofenceList.add(simpleGeofence.toGeofence());
+        } while (cursor.moveToNext());
+    }
+    return geofenceList;
+	}
+
 }
