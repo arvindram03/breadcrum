@@ -15,6 +15,7 @@
     <string name="radius">Radius</string>
 
     <!-- Messages -->
+    <string name="notification_message_title">Location sent to:</string>
     <string name="add_geofences_result_success">
         Add Geofences: Success GeofenceRequestIds=%1$s
     </string>

@@ -40,15 +40,15 @@
         android:value="@integer/google_play_services_version" />
         <!-- The app's entry point -->
         <activity
-            android:name="com.example.android.geofence.MainActivity"
+            android:name="activities.MainActivity"
             android:label="@string/title_activity_geofence" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.example.android.geofence.ReceiveTransitionsIntentService" android:exported="false"></service>
-        <receiver android:name=".IncomingCallReceiver" android:enabled="true"> 
+        <service android:name="intents.ReceiveTransitionsIntentService" android:exported="false"></service>
+        <receiver android:name="receivers.IncomingCallReceiver" android:enabled="true"> 
             <intent-filter>
                                      <action android:name="android.intent.action.PHONE_STATE" /> 
                 </intent-filter>
