@@ -4,6 +4,7 @@ public class Contact {
     int _id;
     String _name;
     String _phone_number;
+    int messageCount;
      
     public Contact(){
          
@@ -41,4 +42,10 @@ public class Contact {
     public void setPhoneNumber(String phone_number){
         this._phone_number = phone_number;
     }
+    public int getMessageCount() {
+		return messageCount;
+	}
+    public void setMessageCount(int messageCount) {
+		this.messageCount = messageCount;
+	}
 }

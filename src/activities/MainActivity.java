@@ -3,10 +3,12 @@ package activities;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -246,7 +248,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getMenuInflater();
-      inflater.inflate(R.menu.contacts_action_list, menu);
+      inflater.inflate(R.menu.menu, menu);
       return true;
     }
     
@@ -260,6 +262,44 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       	intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
       	startActivityForResult(intent, 1);
         break;
+      case R.id.clear_all_contacts:
+    	  new AlertDialog.Builder(this)
+    	  .setTitle("WARNING")
+    	  .setMessage("Do you really want to delete all contacts?")
+    	  .setIcon(android.R.drawable.ic_dialog_alert)
+    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+    	      public void onClick(DialogInterface dialog, int whichButton) {
+    	    	  dataStoreHelper.deleteAllContacts();
+    	      }})
+    	   .setNegativeButton(android.R.string.no, null).show();
+    	break;
+      case R.id.clear_all_logs:
+    	  new AlertDialog.Builder(this)
+    	  .setTitle("WARNING")
+    	  .setMessage("Do you really want to delete all messages?")
+    	  .setIcon(android.R.drawable.ic_dialog_alert)
+    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+    	      public void onClick(DialogInterface dialog, int whichButton) {
+    	    	  dataStoreHelper.deleteAllMessageLogs();
+    	      }})
+    	   .setNegativeButton(android.R.string.no, null).show();
+      	break;	
+      case R.id.clear_all_locations:
+    	  new AlertDialog.Builder(this)
+    	  .setTitle("WARNING")
+    	  .setMessage("Do you really want to delete all locations?")
+    	  .setIcon(android.R.drawable.ic_dialog_alert)
+    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+    	      public void onClick(DialogInterface dialog, int whichButton) {
+    	    	  dataStoreHelper.deleteAllGeofences();
+    	    	  dataStoreHelper.deleteAllGeofenceStates();
+    	      }})
+    	   .setNegativeButton(android.R.string.no, null).show();
+      	
+      	break;	
         }
 
       return true;

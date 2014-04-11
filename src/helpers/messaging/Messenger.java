@@ -7,6 +7,7 @@ import helpers.notification.NotificationHelper;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,25 +46,25 @@ public class Messenger {
                 if(isConnectingToInternet()){
                     List<Address> address = gcd.getFromLocation(location.getLatitude(),location.getLongitude(), 1);
                     if(address.size()>0) {
-                    	content += " Not able to pick the phone. I am near \n" + address.get(0).getAddressLine(0) + "\nProvider: " + location.getProvider() +"\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
+                    	content += "Not able to pick the phone. I am near " + address.get(0).getAddressLine(0) + ". http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
                         ArrayList<String> message = smsManager.divideMessage(content);
-                        smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
+                        //smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                     }
                 }
                 else{
-                	content += " Not able to pick the phone. I am near:\n Lat:" + location.getLatitude() + " \n Lon:" + location.getLongitude() + "\n http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
+                	content += "Not able to pick the phone. I am near http://www.google.co.in/maps/place/" + location.getLatitude() + "," + location.getLongitude();
                     ArrayList<String> message = smsManager.divideMessage(content);
-                    smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
+                    //smsManager.sendMultipartTextMessage(phoneNumber, null, message, null, null);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         else{
-            smsManager.sendTextMessage(phoneNumber, null, content+" Not able to pick the phone.", null, null);
+           // smsManager.sendTextMessage(phoneNumber, null, content+"Not able to pick the phone.", null, null);
         }
         java.util.Date now = new java.util.Date();
-        MessageLog messageLog = new MessageLog(contact.getName(),phoneNumber,content, new Date(now.getTime()));
+        MessageLog messageLog = new MessageLog(contact.getName(),phoneNumber,content, new Timestamp(now.getTime()));
         dataStoreHelper.addMessageLog(messageLog);
         NotificationHelper.sendMessageNotification(context,messageLog);        
     }

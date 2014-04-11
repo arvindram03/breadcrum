@@ -215,34 +215,42 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f020017;
         public static final int ic_action_add_person=0x7f020018;
         public static final int ic_action_email=0x7f020019;
-        public static final int ic_action_person=0x7f02001a;
-        public static final int ic_action_place=0x7f02001b;
-        public static final int ic_action_remove=0x7f02001c;
-        public static final int ic_launcher=0x7f02001d;
-        public static final int ic_notification=0x7f02001e;
-        public static final int ic_plusone_medium_off_client=0x7f02001f;
-        public static final int ic_plusone_small_off_client=0x7f020020;
-        public static final int ic_plusone_standard_off_client=0x7f020021;
-        public static final int ic_plusone_tall_off_client=0x7f020022;
+        public static final int ic_action_map=0x7f02001a;
+        public static final int ic_action_person=0x7f02001b;
+        public static final int ic_action_place=0x7f02001c;
+        public static final int ic_action_remove=0x7f02001d;
+        public static final int ic_launcher=0x7f02001e;
+        public static final int ic_notification=0x7f02001f;
+        public static final int ic_plusone_medium_off_client=0x7f020020;
+        public static final int ic_plusone_small_off_client=0x7f020021;
+        public static final int ic_plusone_standard_off_client=0x7f020022;
+        public static final int ic_plusone_tall_off_client=0x7f020023;
     }
     public static final class id {
-        public static final int add_contact=0x7f050010;
-        public static final int contact_list=0x7f05000f;
-        public static final int contact_name=0x7f050006;
-        public static final int content=0x7f05000d;
+        public static final int add_contact=0x7f050014;
+        public static final int clear_all_contacts=0x7f050017;
+        public static final int clear_all_locations=0x7f050015;
+        public static final int clear_all_logs=0x7f050016;
+        public static final int contact_image=0x7f050006;
+        public static final int contact_name=0x7f050007;
+        public static final int contacts_list=0x7f05000a;
+        public static final int content=0x7f050012;
         public static final int hybrid=0x7f050004;
-        public static final int location_description=0x7f05000a;
-        public static final int location_tag=0x7f050008;
+        public static final int locationIcon=0x7f05000e;
+        public static final int locationList=0x7f05000d;
+        public static final int location_description=0x7f05000f;
+        public static final int location_tag=0x7f05000b;
+        public static final int message_count=0x7f050008;
+        public static final int message_list=0x7f050010;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int pager=0x7f050005;
-        public static final int phone_number=0x7f050007;
-        public static final int receiver_name=0x7f05000b;
-        public static final int receiver_phone_number=0x7f05000c;
+        public static final int phone_number=0x7f050009;
+        public static final int receiver_name=0x7f050011;
         public static final int satellite=0x7f050002;
-        public static final int save_location=0x7f050009;
+        public static final int save_location=0x7f05000c;
         public static final int terrain=0x7f050003;
-        public static final int timestamp=0x7f05000e;
+        public static final int timestamp=0x7f050013;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -257,8 +265,8 @@ containing a value of this type.
         public static final int log_list=0x7f030006;
     }
     public static final class menu {
-        public static final int action_list=0x7f0a0000;
-        public static final int contacts_action_list=0x7f0a0001;
+        public static final int contacts_action_list=0x7f0a0000;
+        public static final int menu=0x7f0a0001;
     }
     public static final class string {
         public static final int add_geofences_already_requested_error=0x7f060037;
@@ -376,6 +384,8 @@ containing a value of this type.
         public static final int connection_error_unknown=0x7f060028;
         public static final int connection_failed=0x7f060039;
         public static final int disconnected=0x7f06003a;
+        public static final int drawer_close=0x7f06005f;
+        public static final int drawer_open=0x7f06005e;
         public static final int geofence1=0x7f06002b;
         public static final int geofence2=0x7f06002c;
         public static final int geofence_input_error_latitude_invalid=0x7f06003c;
@@ -431,6 +441,8 @@ containing a value of this type.
         public static final int unregister_geofence2=0x7f06005b;
     }
     public static final class style {
+        public static final int CustomActionBarTheme=0x7f090004;
+        public static final int MyActionBar=0x7f090005;
         /**  Activity themes 
          */
         public static final int Theme_Base=0x7f090000;

@@ -2,6 +2,8 @@ package helpers.database;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,6 +19,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
  
 public class DataStoreHelper extends SQLiteOpenHelper {
@@ -69,7 +72,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
         String CREATE_MESSAGE_LOGS_TABLE = "CREATE TABLE " + TABLE_MESSAGE_LOGS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_RECEIVER_NAME + " TEXT,"
                 + KEY_RECEIVER_PHONE + " TEXT," + KEY_CONTENT + " TEXT,"
-                + KEY_TIMESTAMP + " TEXT"+ ")";
+                + KEY_TIMESTAMP + " DATETIME"+ ")";
         
         String CREATE_CURRENT_GEOFENCE_STATE_TABLE = "CREATE TABLE " + TABLE_CURRENT_GEOFENCE_STATE + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_GEOFENCE_NAME + " TEXT,"
@@ -118,8 +121,8 @@ public class DataStoreHelper extends SQLiteOpenHelper {
         	return null;
     }
      
-    public List<Contact> getAllContacts() {
-        List<Contact> contactList = new ArrayList<Contact>();
+    public ArrayList<Contact> getAllContacts() {
+        ArrayList<Contact> contactList = new ArrayList<Contact>();
         String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
  
         SQLiteDatabase db = this.getWritableDatabase();
@@ -258,9 +261,8 @@ public class DataStoreHelper extends SQLiteOpenHelper {
     	values.put(KEY_TRANSITION_TYPE, transitionType);
     	values.put(KEY_ID,1);
     	
-    	
 	        if(getUserPosition()!=null){
-	        	db.update(TABLE_CURRENT_GEOFENCE_STATE, values, KEY_ID + " =1", new String[] { String.valueOf(1) });    	
+	        	db.update(TABLE_CURRENT_GEOFENCE_STATE, values, KEY_ID + " =?", new String[] { String.valueOf(1) });
 	        }
 	        else{
 	        	db.insert(TABLE_CURRENT_GEOFENCE_STATE, null, values);
@@ -281,5 +283,65 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		}
 		return null;
 	}
+
+	public void deleteAllContacts() {
+		
+		SQLiteDatabase db = this.getWritableDatabase();		 
+        db.delete(TABLE_CONTACTS, null, null);
+        
+	}
+	
+	public void deleteAllMessageLogs() {
+		SQLiteDatabase db = this.getWritableDatabase();		 
+		db.delete(TABLE_MESSAGE_LOGS, null, null);
+	}
+	
+	public void deleteAllGeofences() {
+		SQLiteDatabase db = this.getWritableDatabase();		 
+		db.delete(TABLE_SIMPLE_GEOFENCES, null, null);
+	}
+	
+	public void deleteAllGeofenceStates() {
+		SQLiteDatabase db = this.getWritableDatabase();		 
+		db.delete(TABLE_CURRENT_GEOFENCE_STATE, null, null);
+	}
+
+	public ArrayList<String> getAllSimpleGeofences() {
+		ArrayList<String> geofenceList = new ArrayList<String>();
+	    String selectQuery = "SELECT  * FROM " + TABLE_SIMPLE_GEOFENCES;
+
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor cursor = db.rawQuery(selectQuery, null);
+	    if (cursor.moveToFirst()) {
+	        do {
+	        	geofenceList.add(cursor.getString(0));
+	        } while (cursor.moveToNext());
+	    }
+	    return geofenceList;
+	}
+
+	public ArrayList<MessageLog> getAllMessageLogs() {
+		ArrayList<MessageLog> messageLogs = new ArrayList<MessageLog>();
+        String selectQuery = "SELECT  * FROM " + TABLE_MESSAGE_LOGS;
+ 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+ 
+        if (cursor.moveToFirst()) {
+            do {
+                MessageLog messageLog = new MessageLog();
+                messageLog.set_id(cursor.getInt(0));
+                messageLog.setReceiverName(cursor.getString(1));
+                messageLog.setReceiverPhoneNumber(cursor.getString(2));
+                messageLog.setContent(cursor.getString(3));
+                messageLog.setTimestamp(Timestamp.valueOf(cursor.getString(4)));
+                
+                messageLogs.add(messageLog);
+            } while (cursor.moveToNext());
+        }
+        return messageLogs;
+	}
+	
+	
 	
 }

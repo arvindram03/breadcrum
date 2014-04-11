@@ -1,5 +1,6 @@
 package fragments;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import utils.GeofenceUtils;
@@ -17,18 +18,21 @@ import models.SimpleGeofence;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-public class LocationListFragment extends ListFragment {
+public class LocationListFragment extends Fragment {
 	
 	public static final String ARG_SECTION_NUMBER = "section_number";
-	private SimpleCursorAdapter adapter; 
+	private ArrayAdapter<String> adapter; 
 	List<Geofence> currentGeofences;
 	private GeofenceRequester geofenceRequester;
 	private GeofenceUtils.REQUEST_TYPE requestType;
@@ -55,21 +59,19 @@ public class LocationListFragment extends ListFragment {
         geofenceRequester = new GeofenceRequester(getActivity());
         DataStoreHelper dataStoreHelper = new DataStoreHelper(getActivity());
 		currentGeofences = dataStoreHelper.getAllGeofences();
-        setListAdapter(adapter);
+		ListView locationList = (ListView) rootView.findViewById(R.id.locationList);
+        locationList.setAdapter(adapter);
         return rootView;
     }
    
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setListAdapter(adapter);
 	}
     private void listAddedSimpleGeofence(FragmentActivity context) {
     	DataStoreHelper dataStoreHelper = new DataStoreHelper(context);
-		Cursor cursor = dataStoreHelper.getAllSimpleGeofenceAdapter();
-		String[] columns = new String[] { DataStoreHelper.KEY_ID };
-        int[] to = new int[] { R.id.location_description };
-        adapter = new SimpleCursorAdapter(context, R.layout.location_tag_list, cursor, columns, to);
+		ArrayList<String> locationList= dataStoreHelper.getAllSimpleGeofences();
+        adapter = new ArrayAdapter<String>(context, R.layout.location_tag_list,R.id.location_description,locationList);
 	}
     
     public boolean addSimpleGeofence(SimpleGeofence simpleGeofence, FragmentActivity context){

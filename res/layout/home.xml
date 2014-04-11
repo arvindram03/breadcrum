@@ -5,26 +5,27 @@
     android:orientation="vertical" 
     >
 
-    <EditText
-        android:id="@+id/location_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine" >
-    </EditText>
-
-    <Button
-        android:id="@+id/save_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onRegisterClicked"
-        android:text="Add Location" />
-    
+	    <EditText
+	        android:id="@+id/location_tag"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="10dp"
+	        android:ems="10"
+	        android:inputType="textMultiLine" 
+	        android:maxLength="140"
+	        android:hint="Ex. Home / Office">
+	    </EditText>
+	
+	    <Button
+	        android:id="@+id/save_location"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:onClick="onRegisterClicked"
+	        android:text="Mark Location" >
+	   </Button>
     <ListView
-		android:id="@android:id/list"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Hello Lists" >
-	</ListView>
-
+        android:id="@+id/locationList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 </LinearLayout>

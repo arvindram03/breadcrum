@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomActionBarTheme"
+           parent="@style/Theme.Base">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+    
+    <style name="MyActionBar"
+           parent="@style/Widget.SampleOutput">
+        <item name="android:background">@drawable/ic_notification</item>
+    </style>
+</resources>

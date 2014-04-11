@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class MessageLog {
 
@@ -8,12 +9,12 @@ public class MessageLog {
 	private String receiverName;
 	private String receiverPhoneNumber;
 	private String content;
-	private Date timestamp;
+	private Timestamp timestamp;
 	
 	public MessageLog() {
 	
 	}
-	public MessageLog(String receiverName, String receiverPhoneNumber, String content, Date timestamp) {
+	public MessageLog(String receiverName, String receiverPhoneNumber, String content, Timestamp timestamp) {
 		this.receiverName = receiverName;
 		this.receiverPhoneNumber = receiverPhoneNumber;
 		this.content = content;
@@ -32,7 +33,7 @@ public class MessageLog {
 	public String getContent() {
 		return content;
 	}
-	public Date getTimestamp() {
+	public Timestamp getTimestamp() {
 		return timestamp;
 	}
 	public void set_id(int _id) {
@@ -47,7 +48,7 @@ public class MessageLog {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
 }
