@@ -185,7 +185,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		
 	}
 
-	private SimpleGeofence getSimpleGeofence(String description) {
+	public SimpleGeofence getSimpleGeofence(String description) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		description = description.toLowerCase(Locale.getDefault()); 
         Cursor cursor = db.query(TABLE_SIMPLE_GEOFENCES, new String[] {
@@ -318,7 +318,20 @@ public class DataStoreHelper extends SQLiteOpenHelper {
         }
         return messageLogs;
 	}
+
+	public void deleteMessageLog(MessageLog messageLog) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MESSAGE_LOGS, KEY_ID + " = ?",
+                new String[] { String.valueOf(messageLog.get_id()) });
+        db.close();
+	}
 	
-	
+	public void deleteSimpleGeofence(String simpleGeofenceId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SIMPLE_GEOFENCES, KEY_ID + " = ?",
+                new String[] { String.valueOf(simpleGeofenceId) });
+        db.close();
+	}
+
 	
 }

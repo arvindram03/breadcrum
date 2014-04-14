@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
+    android:background="@color/white"
     >
 
 	    <EditText
@@ -10,22 +11,44 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="10dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
 	        android:ems="10"
 	        android:inputType="textMultiLine" 
 	        android:maxLength="140"
-	        android:hint="Ex. Home / Office">
+	        android:hint="Ex. Home / Office"
+	        android:fontFamily="sans-serif-light"
+        	android:textStyle="bold">
 	    </EditText>
 	
 	    <Button
 	        android:id="@+id/save_location"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:onClick="onRegisterClicked"
-	        android:text="Mark Location" >
+	        android:onClick="onLocationRegisterClicked"
+	        android:background="@color/theme_color"
+	        android:textColor="@color/white"
+	        android:layout_marginLeft="2dp"
+	        android:layout_marginRight="2dp"
+	        android:text="Mark This Location" 
+	        android:fontFamily="sans-serif-light"
+        	android:textStyle="bold">
 	   </Button>
     <ListView
-        android:id="@+id/locationList"
+        android:id="@+id/location_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
+    <TextView
+    	android:id="@+id/empty_location_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="Mark locations of your interest"
+        android:visibility="gone" 
+        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:includeFontPadding="false"
+	    android:gravity="center">
+    </TextView>
 </LinearLayout>

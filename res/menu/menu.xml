@@ -2,24 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<item
-		        android:id="@+id/add_contact"
-		        android:orderInCategory="100"
-		        android:showAsAction="always"
-		        android:icon="@drawable/ic_action_add_person"
-		        android:title="Add Contact"/>
+        android:id="@+id/add_contact"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_add_person"
+        android:title="Add Contact"/>
 	<item
-		        android:id="@+id/clear_all_locations"
-		        android:orderInCategory="100"
-		        android:icon="@drawable/ic_action_person"
-		        android:title="Clear All Locations"/>
+        android:id="@+id/clear_all_locations"
+        android:orderInCategory="100"
+        android:title="Clear Locations"
+  		android:showAsAction="collapseActionView"/>
 	<item
-		        android:id="@+id/clear_all_logs"
-		        android:orderInCategory="100"
-		        android:icon="@drawable/ic_action_person"
-		        android:title="Clear All Messages"/>
+        android:id="@+id/clear_all_logs"
+        android:orderInCategory="100"
+        android:title="Clear Messages"
+  		android:showAsAction="collapseActionView"/>
 	<item
-		        android:id="@+id/clear_all_contacts"
-		        android:orderInCategory="100"
-		        android:icon="@drawable/ic_action_person"
-		        android:title="Clear All Contacts"/>
+        android:id="@+id/clear_all_contacts"
+        android:orderInCategory="100"
+        android:title="Clear Contacts"
+  		android:showAsAction="collapseActionView"/>
 </menu>

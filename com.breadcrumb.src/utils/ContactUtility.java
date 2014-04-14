@@ -8,7 +8,6 @@ import android.provider.ContactsContract.PhoneLookup;
 
 public class ContactUtility {
 public static Uri getContactImage(String phoneNumber, Context context) {
-		
 		ContentResolver mResolver = context.getContentResolver();
 
 	    Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,Uri.encode(phoneNumber));

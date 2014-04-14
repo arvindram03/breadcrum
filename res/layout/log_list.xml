@@ -10,7 +10,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="15dp"
-        android:background="#444"/>
+        android:background="#bbb"/>
     
     <LinearLayout
         android:layout_toRightOf="@+id/contact_image"
@@ -22,23 +22,30 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:textSize="17sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
         android:layout_marginTop="10dp"
+        android:textColor="@color/title"
         />
      <TextView
         android:id="@+id/content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp" 
+        android:fontFamily="sans-serif-light"
         android:autoLink="web|map"
         android:lineSpacingMultiplier="1.2"
+        android:textColor="@color/content"
         />
 		<TextView
         android:id="@+id/timestamp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp" 
+        android:textSize="13sp" 
         android:layout_marginBottom="15dp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="sans-serif-light"
         />
 	</LinearLayout>
 		      

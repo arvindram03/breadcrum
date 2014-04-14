@@ -22,7 +22,7 @@ public class NotificationHelper {
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.ic_action_email)
+        builder.setSmallIcon(R.drawable.ic_action_email_light)
                .setContentTitle(
                        context.getString(R.string.notification_message_title)+messageLog.getReceiverName())
                .setContentText(messageLog.getContent())
@@ -30,7 +30,7 @@ public class NotificationHelper {
                .setAutoCancel(true);
         NotificationManager mNotificationManager =
             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(messageLog.get_id(), builder.build());
+        mNotificationManager.notify(messageLog.hashCode(), builder.build());
 	}
 	
 	public static void sendLocationNotification(Context context, String transitionType, String ids) {
@@ -43,7 +43,7 @@ public class NotificationHelper {
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.drawable.ic_notification)
+        builder.setSmallIcon(R.drawable.ic_action_place_light)
                .setContentTitle(
                        context.getString(R.string.geofence_transition_notification_title,
                                transitionType, ids))
@@ -52,6 +52,6 @@ public class NotificationHelper {
                .setAutoCancel(true);
         NotificationManager mNotificationManager =
             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(0, builder.build());
+        mNotificationManager.notify(ids.hashCode(), builder.build());
     }
 }

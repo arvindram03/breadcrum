@@ -3,6 +3,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
+              android:background="@color/white"
         >
     <ListView
 		android:id="@+id/contacts_list"
@@ -10,6 +11,26 @@
 		android:layout_height="wrap_content"
 		>
 	</ListView>
- 
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center">
+	<Button
+        android:id="@+id/empty_contact_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add contacts to notify location"
+        android:clickable="true"
+        android:visibility="gone" 
+        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@color/theme_color"
+        android:includeFontPadding="false"
+        android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp">
+	</Button>
+	</LinearLayout>
 </LinearLayout>
 

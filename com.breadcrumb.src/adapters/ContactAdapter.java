@@ -13,6 +13,8 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.PhoneLookup;
@@ -35,13 +37,11 @@ public class ContactAdapter extends ArrayAdapter<Contact>{
 		ImageView contactImage;
 		TextView contactName;
 		TextView phoneNumber;
-		TextView messageCount;
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         Contact contact = getItem(position);
- 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
@@ -49,20 +49,23 @@ public class ContactAdapter extends ArrayAdapter<Contact>{
             holder = new ViewHolder();
             holder.contactName = (TextView) convertView.findViewById(R.id.contact_name);
             holder.phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);
-            holder.messageCount = (TextView) convertView.findViewById(R.id.message_count);
             holder.contactImage = (ImageView) convertView.findViewById(R.id.contact_image);
             convertView.setTag(holder);
-        } else
+        } else{
             holder = (ViewHolder) convertView.getTag();
- 
+        }
         holder.contactName.setText(contact.getName());
         holder.phoneNumber.setText(contact.getPhoneNumber());
-        holder.messageCount.setText("10");
         Uri contactImageUri = ContactUtility.getContactImage(contact.getPhoneNumber(),context);
-        if(contactImageUri!=null)
+        Log.d(contact.getName()+"uri1",contactImageUri+"");
+        if(contactImageUri!=null){
         	holder.contactImage.setImageURI(contactImageUri);
-        else
-        	holder.contactImage.setImageResource(R.drawable.ic_action_person);
+        	holder.contactImage.setBackgroundResource(R.color.white);
+        }
+        else{
+        	holder.contactImage.setImageResource(R.drawable.ic_action_person_light);
+        	holder.contactImage.setBackgroundResource(R.color.icon_bg);
+        }
         return convertView;
     }
 

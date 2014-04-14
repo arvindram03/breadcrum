@@ -1,5 +1,7 @@
 package activities;
 
+import adapters.TabAdapter;
+import android.R.color;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -14,7 +16,10 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -28,6 +33,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,18 +75,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private static final int LOG = 1;
     private static final int CONTACT = 2;
 
-	AppSectionsPagerAdapter appSectionsPagerAdapter;
+	TabAdapter appSectionPagerAdapter;
 	ViewPager viewPager;
 	private REQUEST_TYPE requestType;
-    private REMOVE_TYPE removeType;
+    public static REMOVE_TYPE removeType;
     private DataStoreHelper dataStoreHelper;
     List<Geofence> currentGeofences;
     private GeofenceRequester geofenceRequester;
     private GeofenceRemover geofenceRemover;
     private GeofenceTransitionsReceiver geofenceReceiver;
     private IntentFilter intentFilter;
-    private List<String> mGeofenceIdsToRemove;
-    private Menu menu;
+    public static List<String> geofenceIdsToRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +102,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         geofenceRequester = new GeofenceRequester(this);
         geofenceRemover = new GeofenceRemover(this);
         setContentView(R.layout.activity_main);
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+        appSectionPagerAdapter = new TabAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff"))); 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(appSectionsPagerAdapter);
-       
+        viewPager.setAdapter(appSectionPagerAdapter);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -113,74 +117,36 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
         });
         
-        for (int position = 0; position < appSectionsPagerAdapter.getCount(); position++) {
+        for (int position = 0; position < appSectionPagerAdapter.getCount(); position++) {
         	Drawable tabIcon = getTabIcon(position);
             actionBar.addTab(actionBar.newTab().setIcon(tabIcon).setTabListener(this));
         }
         viewPager.setCurrentItem(LOG);
 
     }
-    
+
     private Drawable getTabIcon(int position) {
     	Bitmap bitmap;
     	Drawable tabIcon=null;
     	switch(position){
     	case LOCATION:
-    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_place); 
+    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_place_light); 
     		tabIcon = new BitmapDrawable(getResources(),bitmap);
     		break;
     	case LOG:
-    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_email); 
+    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_email_light); 
     		tabIcon = new BitmapDrawable(getResources(),bitmap);
     		break;
     	case CONTACT:
-    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_person); 
+    		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_person_light); 
     		tabIcon = new BitmapDrawable(getResources(),bitmap);
     		break;
     	}
+    	tabIcon.setColorFilter(Color.parseColor("#bbbbbb"), Mode.MULTIPLY);
 		return tabIcon;
     }
 
-    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public AppSectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-        	Fragment fragment=null;
-        	Bundle args;
-            switch (position) {
-            case LOCATION:
-	            	fragment = new LocationListFragment();
-	                args = new Bundle();
-	                args.putInt(LocationListFragment.ARG_SECTION_NUMBER, position + 1);
-	                fragment.setArguments(args);
-	                break;
-            case LOG:
-	            	fragment = new LogListFragment();
-	                args = new Bundle();
-	                args.putInt(LogListFragment.ARG_SECTION_NUMBER, position + 1);
-	                fragment.setArguments(args);
-	                break;
-            case CONTACT:
-		        	 fragment = new ContactListFragment();
-	                 args = new Bundle();
-	                 args.putInt(ContactListFragment.ARG_SECTION_NUMBER, position + 1);
-	                 fragment.setArguments(args);
-	                 break;
-	        	 	
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-    }
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
@@ -197,13 +163,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                                 geofenceRemover.removeGeofencesByIntent(
                                     geofenceRequester.getRequestPendingIntent());
                             } else {
-                                geofenceRemover.removeGeofencesById(mGeofenceIdsToRemove);
+                                geofenceRemover.removeGeofencesById(geofenceIdsToRemove);
                             }
                         }
                     break;
                     default:
                         Log.d(GeofenceUtils.APPTAG, getString(R.string.no_resolution));
                 }
+            case 196609:
             case RQS_PICK_CONTACT:
             	if(resultCode == RESULT_OK) {
 					Uri contactData = intent.getData();
@@ -221,10 +188,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 						else{
 							Toast.makeText(this,"Contact added successfully", Toast.LENGTH_SHORT).show();
 							ContactListFragment contactListFragment = new ContactListFragment();
-							contactListFragment.listAddedContacts(this);
-					        ListView contactList = (ListView) findViewById(R.id.contacts_list);
-							contactList.setAdapter(contactListFragment.getAdapter());
-							
+							contactListFragment.listAddedContacts(MainActivity.this);
+							ListView contactListView = (ListView) findViewById(R.id.contacts_list);
+			    	        contactListView.setAdapter(contactListFragment.getAdapter());
+			    	        getActionBar().setSelectedNavigationItem(CONTACT);
 						} 
 			      }
 			      else{
@@ -250,7 +217,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	this.menu = menu;
       MenuInflater inflater = getMenuInflater();
       inflater.inflate(R.menu.menu, menu);
       return true;
@@ -268,42 +234,38 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         break;
       case R.id.clear_all_contacts:
     	  new AlertDialog.Builder(this)
-    	  .setTitle("WARNING")
-    	  .setMessage("Do you really want to delete all contacts?")
-    	  .setIcon(android.R.drawable.ic_dialog_alert)
-    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+    	  .setMessage("Remove all contacts ?")
+    	  .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
 
     	      public void onClick(DialogInterface dialog, int whichButton) {
     	    	  dataStoreHelper.deleteAllContacts();
     	    	  ContactListFragment contactListFragment = new ContactListFragment(); 
     	    	  contactListFragment.listAddedContacts(MainActivity.this);
-    			  ListView contactList = (ListView) findViewById(R.id.contacts_list );
-    			  contactList.setAdapter(contactListFragment.getAdapter());
+    	    	  ListView contactListView = (ListView) findViewById(R.id.contacts_list);
+    	          contactListView.setAdapter(contactListFragment.getAdapter());
+    	          getActionBar().setSelectedNavigationItem(CONTACT);
     	      }})
     	   .setNegativeButton(android.R.string.no, null).show();
     	break;
       case R.id.clear_all_logs:
     	  new AlertDialog.Builder(this)
-    	  .setTitle("WARNING")
-    	  .setMessage("Do you really want to delete all messages?")
-    	  .setIcon(android.R.drawable.ic_dialog_alert)
-    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+    	  .setMessage("Remove all messages ?")
+    	  .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
 
     	      public void onClick(DialogInterface dialog, int whichButton) {
     	    	  dataStoreHelper.deleteAllMessageLogs();
     	    	  LogListFragment logListFragment = new LogListFragment(); 
     	    	  logListFragment.listLogs(MainActivity.this);
-    			  ListView messageList = (ListView) findViewById(R.id.message_list);
-    			  messageList.setAdapter(logListFragment.getAdapter());
+    	    	  ListView logListView = (ListView) findViewById(R.id.message_list);
+    	          logListView.setAdapter(logListFragment.getAdapter());
+    	          getActionBar().setSelectedNavigationItem(LOG);
     	      }})
     	   .setNegativeButton(android.R.string.no, null).show();
       	break;	
       case R.id.clear_all_locations:
     	  new AlertDialog.Builder(this)
-    	  .setTitle("WARNING")
-    	  .setMessage("Do you really want to delete all locations?")
-    	  .setIcon(android.R.drawable.ic_dialog_alert)
-    	  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+    	  .setMessage("Remove all locations ?")
+    	  .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
 
     	      public void onClick(DialogInterface dialog, int whichButton) {
     			  deleteGeofences();
@@ -311,8 +273,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	    	  dataStoreHelper.deleteAllGeofenceStates();
     	    	  LocationListFragment locationListFragment = new LocationListFragment(); 
     	    	  locationListFragment.listAddedSimpleGeofence(MainActivity.this);
-    			  ListView locationList = (ListView) findViewById(R.id.locationList);
-    			  locationList.setAdapter(locationListFragment.getAdapter());
+    	    	  ListView contactListView = (ListView) findViewById(R.id.location_list);
+    	          contactListView.setAdapter(locationListFragment.getAdapter());
+    	          getActionBar().setSelectedNavigationItem(LOCATION);
     	      }})
     	   .setNegativeButton(android.R.string.no, null).show();
       	
@@ -322,42 +285,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       return true;
     }    
 
-    private boolean servicesConnected() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (ConnectionResult.SUCCESS == resultCode) {
-            Log.d(GeofenceUtils.APPTAG, getString(R.string.play_services_available));
-            return true;
-        } else {
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
-            if (dialog != null) {
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                errorFragment.setDialog(dialog);
-                errorFragment.show(getSupportFragmentManager(), GeofenceUtils.APPTAG);
-            }
-            return false;
-        }
-    }
     public void deleteGeofences() {
     	ArrayList<String> geofenceIds = new ArrayList<String>();
     	for(Geofence geofence:currentGeofences){
     		geofenceIds.add(geofence.getRequestId());
     	}
+    	geofenceIdsToRemove = geofenceIds;
         removeType = GeofenceUtils.REMOVE_TYPE.INTENT;
-        if (!servicesConnected()) {
+        if (!GeofenceUtils.servicesConnected(this, getSupportFragmentManager())) {
 
             return;
         }
         try {
-        geofenceRemover.removeGeofencesById(geofenceIds);
+        geofenceRemover.removeGeofencesById(geofenceIdsToRemove);
         } catch (UnsupportedOperationException e) {
            // Toast.makeText(this, R.string.remove_geofences_already_requested_error,
              //           Toast.LENGTH_LONG).show();
         }
     }
 
-    public void onRegisterClicked(View view) {
+    public void onLocationRegisterClicked(View view) {
         requestType = GeofenceUtils.REQUEST_TYPE.ADD;
-        if (!servicesConnected()) {
+        if (!GeofenceUtils.servicesConnected(this, getSupportFragmentManager())) {
 
             return;
         }
@@ -372,7 +321,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     	if(locationListFragment.addSimpleGeofence(simpleGeofence, this)){
     		locationTagText.setText("");
 			locationListFragment.listAddedSimpleGeofence(this);
-			ListView locationList = (ListView) findViewById(R.id.locationList);
+			ListView locationList = (ListView) findViewById(R.id.location_list);
 			locationList.setAdapter(locationListFragment.getAdapter());
     		Toast.makeText(this, "Location added successfully", Toast.LENGTH_SHORT).show();
     		}
@@ -387,7 +336,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public boolean registerGeofence(Geofence geofence, FragmentActivity context) {
         requestType = GeofenceUtils.REQUEST_TYPE.ADD;
         
-        if (!servicesConnected()) {
+        if (!GeofenceUtils.servicesConnected(this, getSupportFragmentManager())) {
             return false;
         }
 		
@@ -425,7 +374,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
 		viewPager.setCurrentItem(tab.getPosition());
+		tab.getIcon().setColorFilter(Color.parseColor("#02798b"), Mode.MULTIPLY);
 	}
 	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {	}
+	public void onTabUnselected(Tab tab, FragmentTransaction arg1) {	
+		tab.getIcon().setColorFilter(Color.parseColor("#bbbbbb"), Mode.MULTIPLY);
+	}
 }

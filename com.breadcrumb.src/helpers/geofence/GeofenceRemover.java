@@ -48,9 +48,7 @@ public class GeofenceRemover implements
 
     public void removeGeofencesById(List<String> geofenceIds) throws
         IllegalArgumentException, UnsupportedOperationException {
-        if ((null == geofenceIds) || (geofenceIds.size() == 0)) {
-            throw new IllegalArgumentException();
-        } else {
+        if ((null != geofenceIds) && (geofenceIds.size() != 0)) {
             if (!inProgress) {
                 requestType = GeofenceUtils.REMOVE_TYPE.LIST;
                 currentGeofenceIds = geofenceIds;
@@ -158,6 +156,7 @@ public class GeofenceRemover implements
         Log.d(GeofenceUtils.APPTAG, context.getString(R.string.connected));
         continueRemoveGeofences();
     }
+    
     @Override
     public void onDisconnected() {
         inProgress = false;

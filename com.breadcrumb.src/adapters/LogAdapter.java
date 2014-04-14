@@ -58,15 +58,17 @@ public class LogAdapter extends ArrayAdapter<MessageLog>{
         holder.timestamp.setText(formattedDate);
         holder.receiverName.setText(messageLog.getReceiverName());
         Uri contactImageUri = ContactUtility.getContactImage(messageLog.getReceiverPhoneNumber(),context);
-        if(contactImageUri!=null)
+        if(contactImageUri!=null){
         	holder.contactImage.setImageURI(contactImageUri);
+        	holder.contactImage.setBackgroundResource(R.color.white);
+        }
         else
-        	holder.contactImage.setImageResource(R.drawable.ic_action_person);
+        	holder.contactImage.setImageResource(R.drawable.ic_action_person_light);
         return convertView;
     }
 
 	private String formatDate(Timestamp timestamp) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a dd MMM yy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a, dd MMM yy");
 		String dateFormat = simpleDateFormat.format(timestamp);
 		return dateFormat;
 	}
