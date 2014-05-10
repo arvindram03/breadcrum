@@ -4,6 +4,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="src" path="com.breadcrumb.src"/>
+	<classpathentry kind="src" path="com.spot.src"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

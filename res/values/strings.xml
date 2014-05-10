@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="app_name">BreadCrumb</string>
-    <string name="title_activity_geofence">BreadCrumb</string>
+    <string name="app_name">Spot</string>
+    <string name="title_activity">Spot</string>
 	
     <!-- Messages -->
 	<string name="notification_message_title">Location sent to : </string>
@@ -62,4 +62,5 @@
         Received an unknown activity request code %1$d in onActivityResult.
     </string>
     <string name="remove">Remove</string>
+    <string name="gotit">Got It!</string>
 </resources>
