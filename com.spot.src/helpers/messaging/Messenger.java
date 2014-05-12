@@ -56,7 +56,6 @@ public class Messenger {
 		String geofencePosition = locationHelper.getUserPosition() != null ? locationHelper
 				.getUserPosition() : "";
 		String content = "Not able to pick the phone. ";
-		String signature = "\nSent via Spot";
 		
 			if (location != null) {
 				if (!geofencePosition.contains("Entered")){

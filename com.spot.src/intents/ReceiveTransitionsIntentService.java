@@ -11,7 +11,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
@@ -36,10 +35,6 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
 			String errorMessage = LocationServiceErrorMessages.getErrorString(
 					this, errorCode);
-
-			Log.e(GeofenceUtils.APPTAG,
-					getString(R.string.geofence_transition_error_detail,
-							errorMessage));
 
 			broadcastIntent
 					.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
@@ -71,17 +66,6 @@ public class ReceiveTransitionsIntentService extends IntentService {
 				NotificationHelper.sendLocationNotification(this,
 						transitionType, ids);
 
-				Log.d(GeofenceUtils.APPTAG,
-						getString(
-								R.string.geofence_transition_notification_title,
-								transitionType, ids));
-				Log.d(GeofenceUtils.APPTAG,
-						getString(R.string.geofence_transition_notification_text));
-
-			} else {
-				Log.e(GeofenceUtils.APPTAG,
-						getString(R.string.geofence_transition_invalid_type,
-								transition));
 			}
 		}
 	}

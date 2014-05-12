@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.spot.R;
@@ -34,15 +33,16 @@ public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 	}
 
 	private void handleGeofenceStatus(Context context, Intent intent) {
-		String message ="";
-		
-		if(TextUtils.equals(intent.getAction(),GeofenceUtils.ACTION_GEOFENCES_ADDED))
+		String message = "";
+
+		if (TextUtils.equals(intent.getAction(),
+				GeofenceUtils.ACTION_GEOFENCES_ADDED))
 			message = "Location added successfully";
-		if(TextUtils.equals(intent.getAction(),GeofenceUtils.ACTION_GEOFENCES_REMOVED))
+		if (TextUtils.equals(intent.getAction(),
+				GeofenceUtils.ACTION_GEOFENCES_REMOVED))
 			message = "Location removed successfully";
-				
-		Toast.makeText(context, message,
-				Toast.LENGTH_SHORT).show();
+
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -51,7 +51,9 @@ public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 	}
 
 	private void handleGeofenceError(Context context, Intent intent) {
-		String msg = intent.getStringExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS);
-		Toast.makeText(context, "Oops! Location not added. Switch Location Settings to high accuracy mode", Toast.LENGTH_SHORT).show();
+		Toast.makeText(
+				context,
+				"Oops! Location not added. Switch Location Settings to high accuracy mode",
+				Toast.LENGTH_SHORT).show();
 	}
 }

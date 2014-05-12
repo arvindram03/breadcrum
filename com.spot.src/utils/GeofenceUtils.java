@@ -1,14 +1,8 @@
 package utils;
 
-import activities.MainActivity.ErrorDialogFragment;
-import android.app.Activity;
-import android.app.Dialog;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-
+import android.content.Context;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.spot.R;
 
 public final class GeofenceUtils {
 	public enum REMOVE_TYPE {
@@ -61,22 +55,14 @@ public final class GeofenceUtils {
 
 	public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
 
-	public static boolean servicesConnected(Activity context,
-			FragmentManager fragmentManager) {
+	public static boolean servicesConnected(Context context) {
 		int resultCode = GooglePlayServicesUtil
 				.isGooglePlayServicesAvailable(context);
 		if (ConnectionResult.SUCCESS == resultCode) {
-			Log.d(GeofenceUtils.APPTAG,
-					context.getString(R.string.play_services_available));
+			
 			return true;
 		} else {
-			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode,
-					context, 0);
-			if (dialog != null) {
-				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-				errorFragment.setDialog(dialog);
-				errorFragment.show(fragmentManager, GeofenceUtils.APPTAG);
-			}
+			
 			return false;
 		}
 	}

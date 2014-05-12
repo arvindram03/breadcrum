@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -93,16 +92,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 			PendingIntent requestIntent) {
 		Intent broadcastIntent = new Intent();
 		if (statusCode == LocationStatusCodes.SUCCESS) {
-			Log.d(GeofenceUtils.APPTAG,
-					context.getString(R.string.remove_geofences_intent_success));
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_REMOVED);
 			broadcastIntent
 					.putExtra(
 							GeofenceUtils.EXTRA_GEOFENCE_STATUS,
 							context.getString(R.string.remove_geofences_intent_success));
 		} else {
-			Log.e(GeofenceUtils.APPTAG, context.getString(
-					R.string.remove_geofences_intent_failure, statusCode));
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR);
 			broadcastIntent.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS,
 					context.getString(R.string.remove_geofences_intent_failure,
@@ -125,7 +120,6 @@ public class GeofenceRemover implements ConnectionCallbacks,
 
 			msg = context.getString(R.string.remove_geofences_id_success,
 					Arrays.toString(geofenceRequestIds));
-			Log.d(GeofenceUtils.APPTAG, msg);
 
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_REMOVED)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
@@ -134,7 +128,6 @@ public class GeofenceRemover implements ConnectionCallbacks,
 		} else {
 			msg = context.getString(R.string.remove_geofences_id_failure,
 					statusCode, Arrays.toString(geofenceRequestIds));
-			Log.e(GeofenceUtils.APPTAG, msg);
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
 					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
@@ -155,14 +148,12 @@ public class GeofenceRemover implements ConnectionCallbacks,
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		Log.d(GeofenceUtils.APPTAG, context.getString(R.string.connected));
 		continueRemoveGeofences();
 	}
 
 	@Override
 	public void onDisconnected() {
 		inProgress = false;
-		Log.d(GeofenceUtils.APPTAG, context.getString(R.string.disconnected));
 		locationClient = null;
 	}
 

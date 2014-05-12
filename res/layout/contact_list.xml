@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-     >
+    android:layout_height="wrap_content" >
 
     <ImageView
         android:id="@+id/contact_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
-        android:background="#bbb"/>
+        android:layout_marginTop="10dp"
+        android:background="#bbb" />
 
     <TextView
         android:id="@+id/contact_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/contact_image"
-        android:maxLines="1"
-        android:textSize="17sp"
         android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/contact_image"
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
+        android:maxLines="1"
         android:textColor="@color/content"
-        />
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/phone_number"
@@ -35,11 +33,10 @@
         android:layout_below="@+id/contact_name"
         android:layout_toRightOf="@+id/contact_image"
         android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="15sp"
-        android:textColor="@color/secondary_text" 
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
-        />
+        android:maxLines="1"
+        android:textColor="@color/secondary_text"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

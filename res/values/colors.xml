@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="theme_color">#26bdcf</color>
-	<color name="white">@android:color/white</color>
-	<color name="title">#222222</color>
-	<color name="secondary_text">#888888</color>
-	<color name="content">#000000</color>
-	<color name="transparent">@android:color/transparent</color>
+
+    <color name="theme_color">#26bdcf</color>
+    <color name="white">@android:color/white</color>
+    <color name="title">#222222</color>
+    <color name="secondary_text">#888888</color>
+    <color name="content">#000000</color>
+    <color name="transparent">@android:color/transparent</color>
     <color name="tab_highlight">#02798b</color>
     <color name="icon_bg">#bbbbbb</color>
+
 </resources>

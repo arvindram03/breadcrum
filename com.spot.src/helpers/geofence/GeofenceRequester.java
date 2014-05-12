@@ -7,13 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import utils.GeofenceUtils;
-import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -27,13 +25,13 @@ import com.spot.R;
 
 public class GeofenceRequester implements OnAddGeofencesResultListener,
 		ConnectionCallbacks, OnConnectionFailedListener {
-	private final Activity activity;
+	private final Context activity;
 	private PendingIntent geofencePendingIntent;
 	private ArrayList<Geofence> currentGeofences;
 	private LocationClient locationClient;
 	private boolean inProgress;
 
-	public GeofenceRequester(Activity activityContext) {
+	public GeofenceRequester(Context activityContext) {
 		activity = activityContext;
 	}
 
@@ -88,14 +86,12 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 		if (LocationStatusCodes.SUCCESS == statusCode) {
 			msg = activity.getString(R.string.add_geofences_result_success,
 					Arrays.toString(geofenceRequestIds));
-			Log.d(GeofenceUtils.APPTAG, msg);
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_ADDED)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
 					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
 		} else {
 			msg = activity.getString(R.string.add_geofences_result_failure,
 					statusCode, Arrays.toString(geofenceRequestIds));
-			Log.e(GeofenceUtils.APPTAG, msg);
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
 					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
@@ -113,14 +109,12 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		Log.d(GeofenceUtils.APPTAG, activity.getString(R.string.connected));
 		continueAddGeofences();
 	}
 
 	@Override
 	public void onDisconnected() {
 		inProgress = false;
-		Log.d(GeofenceUtils.APPTAG, activity.getString(R.string.disconnected));
 		locationClient = null;
 	}
 
@@ -140,11 +134,11 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 
 		inProgress = false;
 		if (connectionResult.hasResolution()) {
-			try {
-				connectionResult.startResolutionForResult(activity,
-						GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			} catch (SendIntentException e) {
-			}
+//			try {
+//				connectionResult.startResolutionForResult(activity,
+//						GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+//			} catch (SendIntentException e) {
+//			}
 
 		} else {
 

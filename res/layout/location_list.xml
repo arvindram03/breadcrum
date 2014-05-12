@@ -7,19 +7,20 @@
         android:id="@+id/locationIcon"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:src="@drawable/ic_action_map" />
+
     <TextView
         android:id="@+id/location_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp" 
         android:layout_gravity="center"
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
-        android:textColor="@color/content" />
+        android:textColor="@color/content"
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +29,6 @@ public class LogListFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		if (rootView != null)
-			Log.d("in", "log not null");
 		super.onResume();
 	}
 

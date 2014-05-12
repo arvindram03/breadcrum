@@ -5,6 +5,7 @@ import helpers.database.DataStoreHelper;
 import java.util.ArrayList;
 
 import models.Contact;
+import activities.MainActivity;
 import adapters.ContactAdapter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,7 +14,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,8 +34,6 @@ public class ContactListFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		if (rootView != null)
-			Log.d("in", "contact not null");
 		super.onResume();
 	}
 
@@ -67,7 +65,7 @@ public class ContactListFragment extends Fragment {
 			public void onClick(View view) {
 				Intent intent = new Intent(Intent.ACTION_PICK);
 				intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-				startActivityForResult(intent, 1);
+				startActivityForResult(intent, MainActivity.RQS_PICK_CONTACT);
 			}
 		});
 		contactListView.setEmptyView(addContactText);

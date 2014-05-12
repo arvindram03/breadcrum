@@ -1,25 +1,24 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme" parent="@android:style/Theme.Holo.Light">
-	    <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>
-	    <item name="android:actionBarTabStyle">@style/MyTheme.ActionBar.TabStyle</item>
-	    
-  	</style>
-  	
-  	<style name="MyTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-    	<item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
-    	<item name="android:background">@color/theme_color</item>
-    	<item name="android:icon">@color/transparent</item>
-  	</style>
+        <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>
+        <item name="android:actionBarTabStyle">@style/MyTheme.ActionBar.TabStyle</item>
+    </style>
 
-  	<style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-    	<item name="android:textColor">@color/white</item>
-    	<item name="android:fontFamily">sans-serif-light</item>
-    	<item name="android:textSize">28sp</item>
-  	</style>
-  	
-  	<style name="MyTheme.ActionBar.TabStyle" parent="@android:style/Widget.Holo.ActionBar.TabView">
-    	<item name="android:background">@drawable/actionbar_tab_indicator</item>
-  	</style>
-  	
+    <style name="MyTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:background">@color/theme_color</item>
+        <item name="android:icon">@color/transparent</item>
+    </style>
+
+    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="MyTheme.ActionBar.TabStyle" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/actionbar_tab_indicator</item>
+    </style>
+
 </resources>

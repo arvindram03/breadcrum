@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +36,6 @@ public class LocationListFragment extends Fragment {
 
 	@Override
 	public void onResume() {
-		if (rootView != null)
-			Log.d("in", "location not null");
 		super.onResume();
 	}
 
@@ -101,8 +98,7 @@ public class LocationListFragment extends Fragment {
 
 	private void removeGeofence(String geofenceId, FragmentActivity context) {
 		MainActivity.removeType = GeofenceUtils.REMOVE_TYPE.INTENT;
-		if (!GeofenceUtils.servicesConnected(context,
-				context.getSupportFragmentManager())) {
+		if (!GeofenceUtils.servicesConnected(context)) {
 
 			return;
 		}

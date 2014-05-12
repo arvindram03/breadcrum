@@ -2,26 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/white"
-    >
-    
-	<ListView
-		android:id="@+id/message_list"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-	 >
-	</ListView>
-	<TextView
-    	android:id="@+id/empty_message_list"
+    android:orientation="vertical" >
+
+    <ListView
+        android:id="@+id/message_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/empty_message_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="No messages to display"
-        android:visibility="gone" 
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
-        android:textSize="20sp"
+        android:gravity="center"
         android:includeFontPadding="false"
-	    android:gravity="center">
+        android:text="No messages to display"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" >
     </TextView>
+
 </LinearLayout>
