@@ -222,24 +222,25 @@ containing a value of this type.
         public static final int common_signin_btn_text_normal_light=0x7f020016;
         public static final int common_signin_btn_text_pressed_dark=0x7f020017;
         public static final int common_signin_btn_text_pressed_light=0x7f020018;
-        public static final int ic_action_add_person=0x7f020019;
-        public static final int ic_action_email=0x7f02001a;
-        public static final int ic_action_email_light=0x7f02001b;
-        public static final int ic_action_map=0x7f02001c;
-        public static final int ic_action_map_light=0x7f02001d;
-        public static final int ic_action_person=0x7f02001e;
-        public static final int ic_action_person_light=0x7f02001f;
-        public static final int ic_action_place=0x7f020020;
-        public static final int ic_action_place_light=0x7f020021;
-        public static final int ic_action_remove=0x7f020022;
-        public static final int ic_launcher=0x7f020023;
-        public static final int ic_notification=0x7f020024;
-        public static final int ic_plusone_medium_off_client=0x7f020025;
-        public static final int ic_plusone_small_off_client=0x7f020026;
-        public static final int ic_plusone_standard_off_client=0x7f020027;
-        public static final int ic_plusone_tall_off_client=0x7f020028;
-        public static final int logo=0x7f020029;
-        public static final int tab_selected=0x7f02002a;
+        public static final int ic_action_accept=0x7f020019;
+        public static final int ic_action_add_person=0x7f02001a;
+        public static final int ic_action_email=0x7f02001b;
+        public static final int ic_action_email_light=0x7f02001c;
+        public static final int ic_action_map=0x7f02001d;
+        public static final int ic_action_map_light=0x7f02001e;
+        public static final int ic_action_person=0x7f02001f;
+        public static final int ic_action_person_light=0x7f020020;
+        public static final int ic_action_place=0x7f020021;
+        public static final int ic_action_place_light=0x7f020022;
+        public static final int ic_action_remove=0x7f020023;
+        public static final int ic_launcher=0x7f020024;
+        public static final int ic_notification=0x7f020025;
+        public static final int ic_plusone_medium_off_client=0x7f020026;
+        public static final int ic_plusone_small_off_client=0x7f020027;
+        public static final int ic_plusone_standard_off_client=0x7f020028;
+        public static final int ic_plusone_tall_off_client=0x7f020029;
+        public static final int logo=0x7f02002a;
+        public static final int tab_selected=0x7f02002b;
     }
     public static final class id {
         public static final int add_contact=0x7f050016;
@@ -420,6 +421,7 @@ containing a value of this type.
         /**  Messages 
          */
         public static final int notification_message_title=0x7f06002b;
+        public static final int open_settings=0x7f06004b;
         public static final int play_services_available=0x7f06003d;
         public static final int register_geofence=0x7f06003e;
         public static final int remove=0x7f060049;
@@ -432,6 +434,7 @@ containing a value of this type.
         public static final int transition_entered=0x7f060044;
         public static final int transition_exited=0x7f060045;
         public static final int transition_unknown=0x7f060046;
+        public static final int turn_off=0x7f06004c;
         public static final int unknown=0x7f060047;
         public static final int unknown_activity_request_code=0x7f060048;
     }

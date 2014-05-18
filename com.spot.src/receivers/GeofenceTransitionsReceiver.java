@@ -47,13 +47,13 @@ public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 	}
 
 	private void handleGeofenceTransition(Context context, Intent intent) {
-		Toast.makeText(context, intent.getAction(), Toast.LENGTH_SHORT).show();
+		//Toast.makeText(context, intent.getAction(), Toast.LENGTH_SHORT).show();
 	}
 
 	private void handleGeofenceError(Context context, Intent intent) {
 		Toast.makeText(
 				context,
-				"Oops! Location not added. Switch Location Settings to high accuracy mode",
+				"Oops! Switch on location settings to use Wi-Fi and mobile network mode to track your entry and exits from locations - Spot",
 				Toast.LENGTH_SHORT).show();
 	}
 }

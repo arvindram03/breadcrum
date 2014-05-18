@@ -37,5 +37,7 @@
     <string name="unknown_activity_request_code">        Received an unknown activity request code %1$d in onActivityResult.</string>
     <string name="remove">Remove</string>
     <string name="gotit">Got It!</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="turn_off">Turn Off</string>
 
 </resources>

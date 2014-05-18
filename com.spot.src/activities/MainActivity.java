@@ -24,6 +24,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -36,9 +37,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -229,10 +232,15 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
+		inflater.inflate(R.menu.menu, menu);		
 		return true;
 	}
-
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+//		MenuItem entryExitNotification = menu.findItem(R.id.turn_off_location_notification);
+//	    entryExitNotification.setIcon(R.drawable.ic_action_accept);
+	    return true;
+	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
@@ -323,6 +331,18 @@ public class MainActivity extends FragmentActivity implements
 					.show();
 
 			break;
+//		case R.id.turn_off_location_notification:
+//			new AlertDialog.Builder(this)
+//			.setMessage("Would you like to turn off notifications while you enter or exit your locations ?")
+//			.setPositiveButton(R.string.turn_off,
+//					new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog,
+//								int whichButton) {
+//							//
+//						}
+//					}).setNegativeButton(android.R.string.no, null).show();
+//			break;
 		}
 
 		return true;
@@ -349,19 +369,23 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void onLocationRegisterClicked(View view) {
+		LocationHelper locationHelper = new LocationHelper(this);
 		requestType = GeofenceUtils.REQUEST_TYPE.ADD;
 		EditText locationTagText = (EditText) findViewById(R.id.location_tag);
 		if (!locationTagText.getText().toString().equals("")) {
+			if (locationHelper.isLocationPresent(locationTagText.getText().toString())){
+				Toast.makeText(this, "Location description Already Added", Toast.LENGTH_SHORT).show();
+			}
+			else{
 			if (!GeofenceUtils.servicesConnected(this)) {
 
 				return;
 			}
 			try {
-				geofenceRequester.addGeofences(currentGeofences);
+				//geofenceRequester.addGeofences(currentGeofences);
 
 				LocationListFragment locationListFragment = new LocationListFragment();
 
-				LocationHelper locationHelper = new LocationHelper(this);
 				Location location = locationHelper.getLocation();
 				if(location!=null) {
 				SimpleGeofence simpleGeofence = new SimpleGeofence(
@@ -383,9 +407,10 @@ public class MainActivity extends FragmentActivity implements
 				}
 				}
 				else {
-					Toast.makeText(this, "Oops! Unable to fetch your location. Check if you have turned on your location settings to GPS, wi-fi and network mode", Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, "Oops! Unable to fetch your location. Check if you have turned on your location settings to use GPS, Wi-fi and Network", Toast.LENGTH_LONG).show();
 				}
 			} catch (UnsupportedOperationException e) {
+			}
 			}
 		}
 
@@ -420,6 +445,28 @@ public class MainActivity extends FragmentActivity implements
 		viewPager.setCurrentItem(tab.getPosition());
 		tab.getIcon()
 				.setColorFilter(Color.parseColor("#02798b"), Mode.MULTIPLY);
+		
+		if(tab.getPosition()==NavigationUtil.LOCATION){
+			
+			final Context context = this;
+			LocationManager locationManager = (LocationManager) this
+					.getSystemService(Context.LOCATION_SERVICE);
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+			if(!isNetworkEnabled){
+				new AlertDialog.Builder(context)
+				.setMessage("You need to set location settings to use Wi-fi and mobile networks mode to determine your location")
+				.setPositiveButton(R.string.open_settings,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+							}
+						}).setNegativeButton(android.R.string.no, null).show();
+				
+			}
+		}
 
 	}
 

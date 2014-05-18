@@ -4,23 +4,29 @@
     <item
         android:id="@+id/add_contact"
         android:icon="@drawable/ic_action_add_person"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:showAsAction="always"
         android:title="Add Contact"/>
     <item
         android:id="@+id/clear_all_locations"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:showAsAction="collapseActionView"
         android:title="Clear Locations"/>
     <item
         android:id="@+id/clear_all_logs"
-        android:orderInCategory="100"
+        android:orderInCategory="3"
         android:showAsAction="collapseActionView"
         android:title="Clear Messages"/>
     <item
         android:id="@+id/clear_all_contacts"
-        android:orderInCategory="100"
+        android:orderInCategory="4"
         android:showAsAction="collapseActionView"
         android:title="Clear Contacts"/>
+    <!-- <item
+        android:id="@+id/turn_off_location_notification"
+        android:orderInCategory="5"
+        android:showAsAction="collapseActionView"
+        android:icon="@drawable/ic_action_accept"
+        android:title="Entry &amp; Exit" /> -->
 
 </menu>

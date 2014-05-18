@@ -62,9 +62,9 @@ public class LocationListFragment extends Fragment {
 
 				});
 		locationListView.setAdapter(adapter);
+		
 		return rootView;
 	}
-
 	private void removeLocationFromList(final int position,
 			final FragmentActivity context) {
 		if (adapter.getCount() <= position) {
