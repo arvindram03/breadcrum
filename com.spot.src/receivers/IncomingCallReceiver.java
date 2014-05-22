@@ -1,5 +1,6 @@
 package receivers;
 
+import utils.MessageUtil;
 import helpers.database.DataStoreHelper;
 import helpers.messaging.Messenger;
 import models.Contact;
@@ -49,7 +50,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 					Contact contact = dataStoreHelper.getContact(phoneNumber);
 					if (contact != null) {
 						Messenger messenger = new Messenger(context);
-						messenger.sendMessage(contact);
+						messenger.sendMessage(contact, MessageUtil.MISSED_CALL_MESSAGE);
 					}
 					callReceived = false;
 					callRinged = false;

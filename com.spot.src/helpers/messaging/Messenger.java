@@ -32,12 +32,12 @@ public class Messenger {
 		this.dataStoreHelper = new DataStoreHelper(context);
 	}
 
-	public void sendMessage(Contact contact) {
+	public void sendMessage(Contact contact, String baseMessage) {
 		String phoneNumber = contact.getPhoneNumber();
 		Location location = locationHelper.getLocation();
 
 		SmsManager smsManager = SmsManager.getDefault();
-		String content = constructMessage(location);
+		String content = constructMessage(location, baseMessage);
 		String signature = "\n\nSent by Spot";
 		ArrayList<String> message = smsManager.divideMessage(content
 				+ signature);
@@ -52,10 +52,10 @@ public class Messenger {
 		NotificationHelper.sendMessageNotification(context, messageLog);
 	}
 
-	private String constructMessage(Location location) {
+	private String constructMessage(Location location, String baseMessage) {
 		String geofencePosition = locationHelper.getUserPosition() != null ? locationHelper
 				.getUserPosition() : "";
-		String content = "Not able to pick the phone. ";
+		String content = baseMessage;
 		
 			if (location != null) {
 				if (!geofencePosition.contains("Entered")){

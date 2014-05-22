@@ -15,12 +15,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 
 public class DataStoreHelper extends SQLiteOpenHelper {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "contactsManager";
 
 	private static final String TABLE_CONTACTS = "contacts";
@@ -28,6 +29,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 	public static final String KEY_ID = "_id";
 	public static final String KEY_NAME = "name";
 	public static final String KEY_PH_NO = "phone_number";
+	public static final String KEY_SHUTDOWN_NOTIFICATION = "shutdown_notification";
 
 	private static final String TABLE_SIMPLE_GEOFENCES = "simple_geofences";
 
@@ -47,6 +49,10 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_CURRENT_GEOFENCE_STATE = "current_geofence_state";
 	private static final String KEY_GEOFENCE_NAME = "geofence_name";
+	
+	
+	
+	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
 
@@ -58,7 +64,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-				+ KEY_PH_NO + " TEXT" + ")";
+				+ KEY_PH_NO + " TEXT,"+KEY_SHUTDOWN_NOTIFICATION+" BOOLEAN DEFAULT 0" + ")";
 
 		String CREATE_LOCATION_TAGS_TABLE = "CREATE TABLE "
 				+ TABLE_SIMPLE_GEOFENCES + "(" + KEY_ID + " TEXT PRIMARY KEY,"
@@ -85,9 +91,10 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-		// db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION_TAGS);
-		// onCreate(db);
+		Log.d("upgrading database","adding new column");
+		String ADD_SHUTDOWN_NOTIFICATION_ICON = " ALTER TABLE "+TABLE_CONTACTS
+				+" ADD COLUMN "+ KEY_SHUTDOWN_NOTIFICATION+" BOOLEAN DEFAULT 0";
+		db.execSQL(ADD_SHUTDOWN_NOTIFICATION_ICON);
 	}
 
 	public boolean addContact(Contact contact) {
@@ -118,6 +125,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 				if (phoneNumber.contains(contact.getPhoneNumber())
 						|| contact.getPhoneNumber().contains(phoneNumber)){
 					contact.setPhoneNumber(phoneNumber);
+					contact.setShutdownNotification(cursor.getInt(3)!=0);
 					return contact;
 				}
 			} while (cursor.moveToNext());
@@ -139,6 +147,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 				contact.setID(Integer.parseInt(cursor.getString(0)));
 				contact.setName(cursor.getString(1));
 				contact.setPhoneNumber(cursor.getString(2));
+				contact.setShutdownNotification(cursor.getInt(3)!=0);
 				contactList.add(contact);
 			} while (cursor.moveToNext());
 		}
@@ -151,6 +160,10 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(KEY_NAME, contact.getName());
 		values.put(KEY_PH_NO, contact.getPhoneNumber());
+		if(contact.isShutdownNotificationEnabled())
+			values.put(KEY_SHUTDOWN_NOTIFICATION, 1);
+		else
+			values.put(KEY_SHUTDOWN_NOTIFICATION, 0);
 
 		int result = db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
 				new String[] { String.valueOf(contact.getID()) });
@@ -347,6 +360,26 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		db.delete(TABLE_SIMPLE_GEOFENCES, KEY_ID + " = ?",
 				new String[] { String.valueOf(simpleGeofenceId) });
 		db.close();
+	}
+
+	public  ArrayList<Contact> getShutdownNotificationEnabledContacts() {
+		ArrayList<Contact> contactList = new ArrayList<Contact>();
+		String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE " + KEY_SHUTDOWN_NOTIFICATION+"=1";
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		if (cursor.moveToFirst()) {
+			do {
+				Contact contact = new Contact();
+				contact.setID(Integer.parseInt(cursor.getString(0)));
+				contact.setName(cursor.getString(1));
+				contact.setPhoneNumber(cursor.getString(2));
+				contact.setShutdownNotification(cursor.getInt(3)!=0);
+				contactList.add(contact);
+			} while (cursor.moveToNext());
+		}
+		return contactList;
 	}
 
 }

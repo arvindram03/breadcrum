@@ -5,7 +5,10 @@ import java.util.List;
 import models.Contact;
 import utils.ContactUtility;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 
 	private class ViewHolder {
 		ImageView contactImage;
+		ImageView shutdownIcon;
 		TextView contactName;
 		TextView phoneNumber;
 	}
@@ -45,6 +49,9 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 			holder.contactImage = (ImageView) convertView
 					.findViewById(R.id.contact_image);
 			convertView.setTag(holder);
+			holder.shutdownIcon = (ImageView) convertView
+					.findViewById(R.id.shutdown_icon);
+			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
@@ -60,6 +67,13 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 					.setImageResource(R.drawable.ic_action_person_light);
 			holder.contactImage.setBackgroundResource(R.color.icon_bg);
 		}
+		if(contact.isShutdownNotificationEnabled()) {
+			holder.shutdownIcon.setColorFilter(Color.parseColor("#02798b"), Mode.MULTIPLY);
+		}
+		else {
+			holder.shutdownIcon.setColorFilter(Color.parseColor("#bbbbbb"), Mode.MULTIPLY);
+		}
+		
 		return convertView;
 	}
 

@@ -38,6 +38,6 @@
     <string name="remove">Remove</string>
     <string name="gotit">Got It!</string>
     <string name="open_settings">Open Settings</string>
-    <string name="turn_off">Turn Off</string>
-
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
 </resources>

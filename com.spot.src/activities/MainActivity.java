@@ -237,8 +237,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-//		MenuItem entryExitNotification = menu.findItem(R.id.turn_off_location_notification);
-//	    entryExitNotification.setIcon(R.drawable.ic_action_accept);
 	    return true;
 	}
 	@Override
@@ -331,18 +329,6 @@ public class MainActivity extends FragmentActivity implements
 					.show();
 
 			break;
-//		case R.id.turn_off_location_notification:
-//			new AlertDialog.Builder(this)
-//			.setMessage("Would you like to turn off notifications while you enter or exit your locations ?")
-//			.setPositiveButton(R.string.turn_off,
-//					new DialogInterface.OnClickListener() {
-//						@Override
-//						public void onClick(DialogInterface dialog,
-//								int whichButton) {
-//							//
-//						}
-//					}).setNegativeButton(android.R.string.no, null).show();
-//			break;
 		}
 
 		return true;
@@ -455,7 +441,7 @@ public class MainActivity extends FragmentActivity implements
 					.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 			if(!isNetworkEnabled){
 				new AlertDialog.Builder(context)
-				.setMessage("You need to set location settings to use Wi-fi and mobile networks mode to determine your location")
+				.setMessage("You need to set location settings to use Wi-fi, Mobile Network and GPS  to determine your location")
 				.setPositiveButton(R.string.open_settings,
 						new DialogInterface.OnClickListener() {
 							@Override

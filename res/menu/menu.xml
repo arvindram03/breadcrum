@@ -22,11 +22,4 @@
         android:orderInCategory="4"
         android:showAsAction="collapseActionView"
         android:title="Clear Contacts"/>
-    <!-- <item
-        android:id="@+id/turn_off_location_notification"
-        android:orderInCategory="5"
-        android:showAsAction="collapseActionView"
-        android:icon="@drawable/ic_action_accept"
-        android:title="Entry &amp; Exit" /> -->
-
 </menu>

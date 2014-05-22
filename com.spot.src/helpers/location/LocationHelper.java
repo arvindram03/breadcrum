@@ -61,7 +61,7 @@ public class LocationHelper implements LocationListener, ConnectionCallbacks, On
 			while(this.newLocation==null){
 	
 			}
-			Toast.makeText(context, "Thalaivere thalaivere thalaiva thalaiva thalaivare thalaiavareeeee thalaivareeee thalaiavaree!!! In my slang :P", Toast.LENGTH_LONG).show();
+			//Toast.makeText(context, "Thalaivere thalaivere thalaiva thalaiva thalaivare thalaiavareeeee thalaivareeee thalaiavaree!!! In my slang :P", Toast.LENGTH_LONG).show();
 			return this.newLocation;
 		} 
 

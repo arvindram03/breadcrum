@@ -5,6 +5,7 @@ public class Contact {
 	int _id;
 	String _name;
 	String _phone_number;
+	boolean _shutdown_notification;
 
 	public Contact() {
 
@@ -43,5 +44,13 @@ public class Contact {
 
 	public void setPhoneNumber(String phone_number) {
 		this._phone_number = phone_number;
+	}
+	
+	public void setShutdownNotification(boolean status) {
+		this._shutdown_notification = status;
+	}
+	
+	public boolean isShutdownNotificationEnabled(){
+		return this._shutdown_notification;
 	}
 }

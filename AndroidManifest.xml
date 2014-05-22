@@ -57,6 +57,17 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name="receivers.BatteryLevelReceiver">
+			<intent-filter>
+			  <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+			  <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
+		    </intent-filter>
+		</receiver>
+		<receiver android:name="receivers.ShutdownReceiver">
+			<intent-filter>
+			  <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+		    </intent-filter>
+		</receiver>
     </application>
 
 </manifest>

@@ -4,6 +4,8 @@ import helpers.database.DataStoreHelper;
 
 import java.util.ArrayList;
 
+import utils.NavigationUtil;
+
 import models.Contact;
 import activities.MainActivity;
 import adapters.ContactAdapter;
@@ -19,9 +21,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.spot.R;
 
@@ -58,6 +62,44 @@ public class ContactListFragment extends Fragment {
 						return true;
 					}
 				});
+		
+		contactListView.setOnItemClickListener(new OnItemClickListener() {
+			
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,final int position,
+					long arg3) {
+				
+				final Contact contact = adapter.getItem(position);
+				final DataStoreHelper dataStoreHelper = new DataStoreHelper(context);
+				new AlertDialog.Builder(context)
+				.setMessage("Send SMS to "+contact.getName()+" when my phone shuts down due to low battery?")
+				.setPositiveButton(R.string.enable,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								contact.setShutdownNotification(true);
+								dataStoreHelper.updateContact(contact);
+								adapter.notifyDataSetChanged();
+							}
+						}).setNegativeButton(R.string.disable, 
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface arg0,
+											int arg1) {
+										contact.setShutdownNotification(false);
+										dataStoreHelper.updateContact(contact);
+										adapter.notifyDataSetChanged();
+									}
+						
+						})
+				.show();
+				
+			}
+			
+		});
 
 		addContactText.setOnClickListener(new OnClickListener() {
 
