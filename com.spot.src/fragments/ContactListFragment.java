@@ -68,7 +68,12 @@ public class ContactListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,final int position,
 					long arg3) {
-				
+				listAddedContacts(context);
+				if (rootView != null) {
+					ListView contactListView = (ListView) rootView
+							.findViewById(R.id.contacts_list);
+					contactListView.setAdapter(adapter);
+				}
 				final Contact contact = adapter.getItem(position);
 				final DataStoreHelper dataStoreHelper = new DataStoreHelper(context);
 				new AlertDialog.Builder(context)

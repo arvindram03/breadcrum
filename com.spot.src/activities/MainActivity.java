@@ -201,6 +201,8 @@ public class MainActivity extends FragmentActivity implements
 
 								contactListView.setAdapter(contactListFragment
 										.getAdapter());
+								contactListFragment
+								.getAdapter().notifyDataSetChanged();
 							}
 							getActionBar().setSelectedNavigationItem(
 									NavigationUtil.CONTACT);
@@ -268,6 +270,8 @@ public class MainActivity extends FragmentActivity implements
 										contactListView
 												.setAdapter(contactListFragment
 														.getAdapter());
+										contactListFragment
+										.getAdapter().notifyDataSetChanged();
 									}
 									getActionBar().setSelectedNavigationItem(
 											NavigationUtil.CONTACT);

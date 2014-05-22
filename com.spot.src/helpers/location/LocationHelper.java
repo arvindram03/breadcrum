@@ -105,7 +105,7 @@ public class LocationHelper implements LocationListener, ConnectionCallbacks, On
 	}
 
 	@SuppressLint("SimpleDateFormat") 
-	private String formatDate(Timestamp timestamp) {
+	public String formatDate(Timestamp timestamp) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 				"hh:mm a, dd MMM yy. ");
 		String dateFormat = simpleDateFormat.format(timestamp);

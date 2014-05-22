@@ -1,10 +1,16 @@
 package helpers.database;
 
+import helpers.location.LocationHelper;
+import helpers.messaging.Messenger;
+import helpers.notification.NotificationHelper;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import utils.MessageUtil;
 
 import models.Contact;
 import models.MessageLog;
@@ -15,6 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
@@ -49,7 +56,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	private static final String TABLE_CURRENT_GEOFENCE_STATE = "current_geofence_state";
 	private static final String KEY_GEOFENCE_NAME = "geofence_name";
-	
+	private Context context;
 	
 	
 	
@@ -58,6 +65,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	public DataStoreHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		this.context = context;
 	}
 
 	@Override
@@ -380,6 +388,51 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		return contactList;
+	}
+
+	public void loadMessageSamples() {
+		LocationHelper locationHelper = new LocationHelper(context);
+		
+		java.util.Date now = new java.util.Date();
+		String linkContent =  " http://www.google.co.in/maps/place/"
+				+ "13.0623283,80.2801495";
+				 
+		
+		String withInternet = "Entered / Left Office at " + 
+				locationHelper.formatDate(new Timestamp(now.getTime()));
+		String address = " No.7 CSK road, Chepauk, Chennai";
+		withInternet += MessageUtil.MISSED_CALL_MESSAGE + " I am near"+address + linkContent;
+		
+		MessageLog messageLog = new MessageLog("Mr. X  #withInternet", "1234567890",
+				withInternet, new Timestamp(now.getTime()));
+		
+		addMessageLog(messageLog);
+		
+		String withoutInternet = "Entered / Left Office at " + 
+				locationHelper.formatDate(new Timestamp(now.getTime()));
+		withoutInternet += MessageUtil.MISSED_CALL_MESSAGE + " I am near" + linkContent;
+		
+		
+		messageLog = new MessageLog("Mr. X  #withoutInternet", "1234567890",
+				withoutInternet, new Timestamp(now.getTime()));
+		
+		addMessageLog(messageLog);
+		
+		
+		
+		String withoutLocation = MessageUtil.MISSED_CALL_MESSAGE + " I am near"+address + linkContent;
+		messageLog = new MessageLog("Mr. X  #withoutLocation", "1234567890",
+				withoutLocation, new Timestamp(now.getTime()));
+		
+		addMessageLog(messageLog);
+		
+		
+		String shutdownMessage = MessageUtil.SHUTDOWN_MESSAGE + " I am near"+address + linkContent;
+		messageLog = new MessageLog("Mr. X  #batteryLow", "1234567890",
+				shutdownMessage, new Timestamp(now.getTime()));
+		
+		addMessageLog(messageLog);
+		
 	}
 
 }
