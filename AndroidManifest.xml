@@ -37,12 +37,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.mixpanel.android.surveys.SurveyActivity" />
 
         <service
             android:name="intents.ReceiveTransitionsIntentService"
             android:exported="false" >
         </service>
-
+		<service android:name="org.openudid.OpenUDID_service" android:exported="false">
+		    <intent-filter>
+		        <action android:name="org.openudid.GETUDID" />
+		    </intent-filter>
+		</service>
+		<service android:name="org.openudid.OpenUDID_manager" android:exported="false">
+		    <intent-filter>
+		        <action android:name="org.openudid.GETUDID" />
+		    </intent-filter>
+		</service>
         <receiver
             android:name="receivers.IncomingCallReceiver"
             android:enabled="true" >
@@ -57,17 +67,17 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="receivers.BatteryLevelReceiver">
-			<intent-filter>
-			  <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
-			  <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
-		    </intent-filter>
-		</receiver>
-		<receiver android:name="receivers.ShutdownReceiver">
-			<intent-filter>
-			  <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
-		    </intent-filter>
-		</receiver>
+        <receiver android:name="receivers.BatteryLevelReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="receivers.ShutdownReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

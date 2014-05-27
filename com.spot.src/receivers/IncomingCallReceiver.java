@@ -15,7 +15,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	public static boolean callRinged = false;
 	public static boolean callReceived = false;
 	public static String phoneNumber;
-
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
@@ -35,8 +35,12 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
+			DataStoreHelper dataStoreHelper;
+			Contact contact;
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
+				dataStoreHelper = new DataStoreHelper(
+						context);
 				callRinged = true;
 				phoneNumber = incomingNumber;
 				break;
@@ -45,9 +49,9 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
 				if (callRinged && !callReceived) {
-					DataStoreHelper dataStoreHelper = new DataStoreHelper(
+					dataStoreHelper = new DataStoreHelper(
 							context);
-					Contact contact = dataStoreHelper.getContact(phoneNumber);
+					contact = dataStoreHelper.getContact(phoneNumber);
 					if (contact != null) {
 						Messenger messenger = new Messenger(context);
 						messenger.sendMessage(contact, MessageUtil.MISSED_CALL_MESSAGE);

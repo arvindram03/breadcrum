@@ -7,17 +7,19 @@ import helpers.database.DataStoreHelper;
 import helpers.geofence.GeofenceRemover;
 import helpers.geofence.GeofenceRequester;
 import helpers.location.LocationHelper;
+import interfaces.LocationChangeNotifier;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import models.Contact;
 import models.SimpleGeofence;
 import receivers.GeofenceTransitionsReceiver;
+import utils.AnalyticsUtil;
 import utils.GeofenceUtils;
 import utils.GeofenceUtils.REMOVE_TYPE;
 import utils.GeofenceUtils.REQUEST_TYPE;
 import utils.NavigationUtil;
+import utils.SystemUtil;
 import adapters.TabAdapter;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -28,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +61,7 @@ import com.google.android.gms.location.Geofence;
 import com.spot.R;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, LocationChangeNotifier {
 
 	public static final int RQS_PICK_CONTACT = 1;
 
@@ -72,8 +75,10 @@ public class MainActivity extends FragmentActivity implements
 	private GeofenceRemover geofenceRemover;
 	private GeofenceTransitionsReceiver geofenceReceiver;
 	private IntentFilter intentFilter;
-	public static List<String> geofenceIdsToRemove;
 
+	private EditText locationTagText;
+	public static List<String> geofenceIdsToRemove;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,7 +119,18 @@ public class MainActivity extends FragmentActivity implements
 
 		viewPager.setCurrentItem(NavigationUtil.getCurrentItem(
 				MainActivity.this, getIntent().getAction()));
-
+		
+		SharedPreferences sharedPreferences = getSharedPreferences(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY, Context.MODE_PRIVATE);
+		boolean isFirstTime = sharedPreferences.getBoolean(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY,true);
+		if(isFirstTime){
+			
+			AnalyticsUtil.logEvent(this, AnalyticsUtil.SPOT_INSTALL);
+			Toast.makeText(this, "first time", Toast.LENGTH_SHORT).show();
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putBoolean(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY, false);
+			editor.commit();
+			
+		}
 	}
 
 	private Drawable getTabIcon(int position) {
@@ -352,16 +368,14 @@ public class MainActivity extends FragmentActivity implements
 		try {
 			geofenceRemover.removeGeofencesById(geofenceIdsToRemove);
 		} catch (UnsupportedOperationException e) {
-			Toast.makeText(this,
-					R.string.remove_geofences_already_requested_error,
-					Toast.LENGTH_LONG).show();
+			
 		}
 	}
 
 	public void onLocationRegisterClicked(View view) {
 		LocationHelper locationHelper = new LocationHelper(this);
 		requestType = GeofenceUtils.REQUEST_TYPE.ADD;
-		EditText locationTagText = (EditText) findViewById(R.id.location_tag);
+		this.locationTagText = (EditText) findViewById(R.id.location_tag);
 		if (!locationTagText.getText().toString().equals("")) {
 			if (locationHelper.isLocationPresent(locationTagText.getText().toString())){
 				Toast.makeText(this, "Location description Already Added", Toast.LENGTH_SHORT).show();
@@ -373,32 +387,8 @@ public class MainActivity extends FragmentActivity implements
 			}
 			try {
 				//geofenceRequester.addGeofences(currentGeofences);
-
-				LocationListFragment locationListFragment = new LocationListFragment();
-
-				Location location = locationHelper.getLocation();
-				if(location!=null) {
-				SimpleGeofence simpleGeofence = new SimpleGeofence(
-						locationTagText.getText().toString(),
-						location.getLatitude(), location.getLongitude(), 200,
-						Geofence.NEVER_EXPIRE,
-						Geofence.GEOFENCE_TRANSITION_ENTER
-								| Geofence.GEOFENCE_TRANSITION_EXIT);
-				if (registerGeofence(simpleGeofence.toGeofence(), this)) {
-					if (locationListFragment.addSimpleGeofence(simpleGeofence,
-							this)) {
-						locationTagText.setText("");
-						locationListFragment.listAddedSimpleGeofence(this);
-						ListView locationList = (ListView) findViewById(R.id.location_list);
-						locationList.setAdapter(locationListFragment
-								.getAdapter());
-
-					}
-				}
-				}
-				else {
-					Toast.makeText(this, "Oops! Unable to fetch your location. Check if you have turned on your location settings to use GPS, Wi-fi and Network", Toast.LENGTH_LONG).show();
-				}
+				locationHelper.requestLocationUpdate(this);	
+				
 			} catch (UnsupportedOperationException e) {
 			}
 			}
@@ -465,4 +455,34 @@ public class MainActivity extends FragmentActivity implements
 		tab.getIcon()
 				.setColorFilter(Color.parseColor("#bbbbbb"), Mode.MULTIPLY);
 	}
+
+	@Override
+	public void locationChanged(Location location) {
+		LocationListFragment locationListFragment = new LocationListFragment();
+
+		
+		if(location!=null) {
+		SimpleGeofence simpleGeofence = new SimpleGeofence(
+				locationTagText.getText().toString(),
+				location.getLatitude(), location.getLongitude(), 200,
+				Geofence.NEVER_EXPIRE,
+				Geofence.GEOFENCE_TRANSITION_ENTER
+						| Geofence.GEOFENCE_TRANSITION_EXIT);
+		if (registerGeofence(simpleGeofence.toGeofence(), this)) {
+			if (locationListFragment.addSimpleGeofence(simpleGeofence,
+					this)) {
+				locationTagText.setText("");
+				locationListFragment.listAddedSimpleGeofence(this);
+				ListView locationList = (ListView) findViewById(R.id.location_list);
+				locationList.setAdapter(locationListFragment
+						.getAdapter());
+			}
+		}
+		}
+		else {
+			Toast.makeText(this, "Oops! Unable to fetch your location. Check if you have turned on your location settings to use GPS, Wi-fi and Network", Toast.LENGTH_LONG).show();
+		}
+		
+	}
+
 }

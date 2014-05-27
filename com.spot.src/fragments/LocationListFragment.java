@@ -91,6 +91,7 @@ public class LocationListFragment extends Fragment {
 								adapter.remove(adapter.getItem(position));
 								adapter.notifyDataSetChanged();
 								removeGeofence(location, context);
+								dataStoreHelper.removeUserPositionIfNoLocationListed();
 							}
 						}).setNegativeButton(android.R.string.no, null).show();
 

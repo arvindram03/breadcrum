@@ -1,6 +1,7 @@
 package helpers.location;
 
 import helpers.database.DataStoreHelper;
+import interfaces.LocationChangeNotifier;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -16,21 +17,21 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class LocationHelper implements LocationListener, ConnectionCallbacks, OnConnectionFailedListener  {
 	Context context;
 	public static final long MIN_TIME_BETWEEN_UPDATE = 0l;
 	public static final long MIN_DISTANCE_BETWEEN_UPDATE = 0l;
 	Location newLocation;
-
+	LocationChangeNotifier locationChangeNotifier;
+	
 	public LocationHelper(Context context) {
 		this.context = context;
 		this.newLocation= null;
 	}
 
-	public Location getLocation() {
-		Location location = null;
+	public void requestLocationUpdate(LocationChangeNotifier locationChangeNotifier) {
+		this.locationChangeNotifier = locationChangeNotifier;
 		LocationManager locationManager = (LocationManager) context
 				.getSystemService(Context.LOCATION_SERVICE);
 		boolean isGPSEnabled = locationManager
@@ -39,45 +40,20 @@ public class LocationHelper implements LocationListener, ConnectionCallbacks, On
 				.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
 		if (isNetworkEnabled) {
-			locationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATE,
-					MIN_DISTANCE_BETWEEN_UPDATE, this);
-			if (locationManager != null) {
-				location = locationManager
-						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			}
+			locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER,  this, null);
 		} else if (isGPSEnabled) {
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATE,
-					MIN_DISTANCE_BETWEEN_UPDATE, this);
-			if (locationManager != null) {
-				location = locationManager
-						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			}
-
-		}
-		if((isGPSEnabled || isNetworkEnabled) && location==null){
-			
-			while(this.newLocation==null){
-	
-			}
-			//Toast.makeText(context, "Thalaivere thalaivere thalaiva thalaiva thalaivare thalaiavareeeee thalaivareeee thalaiavaree!!! In my slang :P", Toast.LENGTH_LONG).show();
-			return this.newLocation;
+			locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,  this, null);
 		} 
-
-		return location;
-
 	}
 
 	@Override
 	public void onLocationChanged(Location newLocation) {
-		// TODO Auto-generated method stub
 		this.newLocation = newLocation;
+		this.locationChangeNotifier.locationChanged(newLocation);
 	}
 
 	@Override
 	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

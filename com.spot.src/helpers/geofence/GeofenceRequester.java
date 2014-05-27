@@ -3,7 +3,6 @@ package helpers.geofence;
 import intents.ReceiveTransitionsIntentService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import utils.GeofenceUtils;
@@ -21,7 +20,6 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
-import com.spot.R;
 
 public class GeofenceRequester implements OnAddGeofencesResultListener,
 		ConnectionCallbacks, OnConnectionFailedListener {
@@ -82,19 +80,14 @@ public class GeofenceRequester implements OnAddGeofencesResultListener,
 	@Override
 	public void onAddGeofencesResult(int statusCode, String[] geofenceRequestIds) {
 		Intent broadcastIntent = new Intent();
-		String msg;
 		if (LocationStatusCodes.SUCCESS == statusCode) {
-			msg = activity.getString(R.string.add_geofences_result_success,
-					Arrays.toString(geofenceRequestIds));
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_ADDED)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, "");
 		} else {
-			msg = activity.getString(R.string.add_geofences_result_failure,
-					statusCode, Arrays.toString(geofenceRequestIds));
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, "");
 		}
 
 		LocalBroadcastManager.getInstance(activity).sendBroadcast(

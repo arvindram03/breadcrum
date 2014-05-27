@@ -38,8 +38,9 @@
         android:textColor="@color/secondary_text"
         android:textSize="15sp"
         android:textStyle="bold" />
-    
-    <!-- <ImageView
+
+    <!--
+         <ImageView
         android:id="@+id/key_contact"
         
         android:layout_width="50dp"
@@ -48,16 +49,16 @@
         android:layout_toRightOf="@+id/contact_name"
         android:layout_marginRight="10dp"
         android:background="#bbb"
-        /> -->
+        />
+    -->
 
     <ImageView
         android:id="@+id/shutdown_icon"
-        android:src="@drawable/ic_action_battery"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-         />
+        android:src="@drawable/ic_action_battery" />
 
 </RelativeLayout>

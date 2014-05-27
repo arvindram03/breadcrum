@@ -3,12 +3,14 @@ package helpers.messaging;
 import helpers.database.DataStoreHelper;
 import helpers.location.LocationHelper;
 import helpers.notification.NotificationHelper;
-
+import interfaces.LocationChangeNotifier;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import utils.AnalyticsUtil;
 
 import models.Contact;
 import models.MessageLog;
@@ -20,11 +22,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.SmsManager;
 
-public class Messenger {
+
+public class Messenger implements LocationChangeNotifier{
 
 	private Context context;
 	private LocationHelper locationHelper;
 	private DataStoreHelper dataStoreHelper;
+	Contact contact;
+	String baseMessage;
 
 	public Messenger(Context context) {
 		this.context = context;
@@ -33,25 +38,11 @@ public class Messenger {
 	}
 
 	public void sendMessage(Contact contact, String baseMessage) {
-		String phoneNumber = contact.getPhoneNumber();
-		Location location = locationHelper.getLocation();
-
-		SmsManager smsManager = SmsManager.getDefault();
-		String content = constructMessage(location, baseMessage);
-		String signature = "\n\nSent by Spot";
-		ArrayList<String> message = smsManager.divideMessage(content
-				+ signature);
-		smsManager.sendMultipartTextMessage(phoneNumber, null, message, null,
-				null);
-
-		java.util.Date now = new java.util.Date();
-		MessageLog messageLog = new MessageLog(contact.getName(), phoneNumber,
-				content, new Timestamp(now.getTime()));
-		dataStoreHelper.addMessageLog(messageLog);
-
-		NotificationHelper.sendMessageNotification(context, messageLog);
+		this.contact = contact;
+		this.baseMessage = baseMessage;	
+		locationHelper.requestLocationUpdate(this);
 	}
-
+	
 	private String constructMessage(Location location, String baseMessage) {
 		String geofencePosition = locationHelper.getUserPosition() != null ? locationHelper
 				.getUserPosition() : "";
@@ -106,5 +97,23 @@ public class Messenger {
 					}
 		}
 		return false;
+	}
+
+	@Override
+	public void locationChanged(Location newLocation) {
+		String phoneNumber = contact.getPhoneNumber();
+		SmsManager smsManager = SmsManager.getDefault();
+		String content = constructMessage(newLocation, baseMessage);
+		String signature = "\n\nSent by Spot";
+		ArrayList<String> message = smsManager.divideMessage(content
+				+ signature);
+		smsManager.sendMultipartTextMessage(phoneNumber, null, message, null,
+				null);
+		AnalyticsUtil.logEvent(context,baseMessage);
+		java.util.Date now = new java.util.Date();
+		MessageLog messageLog = new MessageLog(contact.getName(), phoneNumber,
+				content, new Timestamp(now.getTime()));
+		dataStoreHelper.addMessageLog(messageLog);
+		NotificationHelper.sendMessageNotification(context, messageLog);
 	}
 }

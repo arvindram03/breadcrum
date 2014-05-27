@@ -1,8 +1,6 @@
 package helpers.database;
 
 import helpers.location.LocationHelper;
-import helpers.messaging.Messenger;
-import helpers.notification.NotificationHelper;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -21,7 +19,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
@@ -36,7 +33,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 	public static final String KEY_ID = "_id";
 	public static final String KEY_NAME = "name";
 	public static final String KEY_PH_NO = "phone_number";
-	public static final String KEY_SHUTDOWN_NOTIFICATION = "shutdown_notification";
+	public static final String KEY_LOW_BATTERY_NOTIFICATION = "low_battery_notification";
 
 	private static final String TABLE_SIMPLE_GEOFENCES = "simple_geofences";
 
@@ -72,7 +69,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
-				+ KEY_PH_NO + " TEXT,"+KEY_SHUTDOWN_NOTIFICATION+" BOOLEAN DEFAULT 0" + ")";
+				+ KEY_PH_NO + " TEXT,"+KEY_LOW_BATTERY_NOTIFICATION+" BOOLEAN DEFAULT 0" + ")";
 
 		String CREATE_LOCATION_TAGS_TABLE = "CREATE TABLE "
 				+ TABLE_SIMPLE_GEOFENCES + "(" + KEY_ID + " TEXT PRIMARY KEY,"
@@ -99,9 +96,9 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.d("upgrading database","adding new column");
+//		Log.d("upgrading database","adding new column");
 		String ADD_SHUTDOWN_NOTIFICATION_ICON = " ALTER TABLE "+TABLE_CONTACTS
-				+" ADD COLUMN "+ KEY_SHUTDOWN_NOTIFICATION+" BOOLEAN DEFAULT 0";
+				+" ADD COLUMN "+ KEY_LOW_BATTERY_NOTIFICATION+" BOOLEAN DEFAULT 0";
 		db.execSQL(ADD_SHUTDOWN_NOTIFICATION_ICON);
 	}
 
@@ -169,9 +166,9 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		values.put(KEY_NAME, contact.getName());
 		values.put(KEY_PH_NO, contact.getPhoneNumber());
 		if(contact.isShutdownNotificationEnabled())
-			values.put(KEY_SHUTDOWN_NOTIFICATION, 1);
+			values.put(KEY_LOW_BATTERY_NOTIFICATION, 1);
 		else
-			values.put(KEY_SHUTDOWN_NOTIFICATION, 0);
+			values.put(KEY_LOW_BATTERY_NOTIFICATION, 0);
 
 		int result = db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
 				new String[] { String.valueOf(contact.getID()) });
@@ -370,9 +367,9 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 
-	public  ArrayList<Contact> getShutdownNotificationEnabledContacts() {
+	public  ArrayList<Contact> getLowBatteryNotificationEnabledContacts() {
 		ArrayList<Contact> contactList = new ArrayList<Contact>();
-		String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE " + KEY_SHUTDOWN_NOTIFICATION+"=1";
+		String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS + " WHERE " + KEY_LOW_BATTERY_NOTIFICATION+"=1";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -433,6 +430,21 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		
 		addMessageLog(messageLog);
 		
+	}
+
+	public void clearShutdownFlag() {
+		String clearShutdownFlagQuery = "update "+TABLE_CONTACTS+" set "+KEY_LOW_BATTERY_NOTIFICATION+"=0";
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL(clearShutdownFlagQuery);
+		
+	}
+
+	public void removeUserPositionIfNoLocationListed() {
+		if(getAllSimpleGeofences().size() == 0){
+			String clearUserPosition = "delete from "+TABLE_CURRENT_GEOFENCE_STATE;
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.execSQL(clearUserPosition);
+		}
 	}
 
 }

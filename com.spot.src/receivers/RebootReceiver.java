@@ -18,12 +18,17 @@ public class RebootReceiver extends BroadcastReceiver{
 	public void onReceive(Context context, Intent intent) {
 		DataStoreHelper dataStoreHelper = new DataStoreHelper(context);
 		List<Geofence> currentGeofences = dataStoreHelper.getAllGeofences();
-		GeofenceRequester geofenceRequester = new GeofenceRequester(context);				
-		if (GeofenceUtils.servicesConnected(context)) {
-			try{
-				geofenceRequester.addGeofences(currentGeofences);
-				}
-				catch(UnsupportedOperationException e){}
+		
+		if(currentGeofences.size()>0){
+			
+			GeofenceRequester geofenceRequester = new GeofenceRequester(context);				
+			if (GeofenceUtils.servicesConnected(context)) {
+				try{
+					geofenceRequester.addGeofences(currentGeofences);
+					}
+					catch(UnsupportedOperationException e){}
+			
+			}
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package helpers.geofence;
 
-import java.util.Arrays;
 import java.util.List;
 
 import utils.GeofenceUtils;
@@ -19,7 +18,6 @@ import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailed
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
-import com.spot.R;
 
 public class GeofenceRemover implements ConnectionCallbacks,
 		OnConnectionFailedListener, OnRemoveGeofencesResultListener {
@@ -96,12 +94,11 @@ public class GeofenceRemover implements ConnectionCallbacks,
 			broadcastIntent
 					.putExtra(
 							GeofenceUtils.EXTRA_GEOFENCE_STATUS,
-							context.getString(R.string.remove_geofences_intent_success));
+							"");
 		} else {
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR);
 			broadcastIntent.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS,
-					context.getString(R.string.remove_geofences_intent_failure,
-							statusCode));
+					"");
 		}
 		LocalBroadcastManager.getInstance(context).sendBroadcast(
 				broadcastIntent);
@@ -114,23 +111,15 @@ public class GeofenceRemover implements ConnectionCallbacks,
 
 		Intent broadcastIntent = new Intent();
 
-		String msg;
-
 		if (LocationStatusCodes.SUCCESS == statusCode) {
-
-			msg = context.getString(R.string.remove_geofences_id_success,
-					Arrays.toString(geofenceRequestIds));
-
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCES_REMOVED)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, "");
 
 		} else {
-			msg = context.getString(R.string.remove_geofences_id_failure,
-					statusCode, Arrays.toString(geofenceRequestIds));
 			broadcastIntent.setAction(GeofenceUtils.ACTION_GEOFENCE_ERROR)
 					.addCategory(GeofenceUtils.CATEGORY_LOCATION_SERVICES)
-					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, msg);
+					.putExtra(GeofenceUtils.EXTRA_GEOFENCE_STATUS, "");
 		}
 		LocalBroadcastManager.getInstance(context).sendBroadcast(
 				broadcastIntent);

@@ -4,8 +4,6 @@ import helpers.database.DataStoreHelper;
 
 import java.util.ArrayList;
 
-import utils.NavigationUtil;
-
 import models.Contact;
 import activities.MainActivity;
 import adapters.ContactAdapter;
@@ -25,7 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.spot.R;
 
@@ -75,33 +72,35 @@ public class ContactListFragment extends Fragment {
 					contactListView.setAdapter(adapter);
 				}
 				final Contact contact = adapter.getItem(position);
+				final int buttonId;
+				final String message = "Send SMS to "+contact.getName()+" when my battery is critically low";
+				if(contact.isShutdownNotificationEnabled())
+					buttonId = R.string.disable;
+				else
+					buttonId = R.string.enable;
 				final DataStoreHelper dataStoreHelper = new DataStoreHelper(context);
 				new AlertDialog.Builder(context)
-				.setMessage("Send SMS to "+contact.getName()+" when my phone shuts down due to low battery?")
-				.setPositiveButton(R.string.enable,
+				.setMessage(message)
+				.setPositiveButton(buttonId,
 						new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
-								contact.setShutdownNotification(true);
+								int contactsCount = adapter.getCount();
+								for(int index=0;index<contactsCount;index++)
+									adapter.getItem(index).setShutdownNotification(false);
+								if(buttonId == R.string.enable)
+									contact.setShutdownNotification(true);
+								else
+									contact.setShutdownNotification(false);
+								
+								dataStoreHelper.clearShutdownFlag();
 								dataStoreHelper.updateContact(contact);
+								
 								adapter.notifyDataSetChanged();
 							}
-						}).setNegativeButton(R.string.disable, 
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface arg0,
-											int arg1) {
-										contact.setShutdownNotification(false);
-										dataStoreHelper.updateContact(contact);
-										adapter.notifyDataSetChanged();
-									}
-						
-						})
-				.show();
-				
+						}).show();
 			}
 			
 		});

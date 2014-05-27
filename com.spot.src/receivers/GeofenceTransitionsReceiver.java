@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.spot.R;
-
 public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -26,10 +24,7 @@ public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 				GeofenceUtils.ACTION_GEOFENCE_TRANSITION)) {
 
 			handleGeofenceTransition(context, intent);
-		} else {
-			Toast.makeText(context, R.string.invalid_action, Toast.LENGTH_SHORT)
-					.show();
-		}
+		} 
 	}
 
 	private void handleGeofenceStatus(Context context, Intent intent) {

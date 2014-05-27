@@ -22,4 +22,5 @@
         android:orderInCategory="4"
         android:showAsAction="collapseActionView"
         android:title="Clear Contacts"/>
+
 </menu>

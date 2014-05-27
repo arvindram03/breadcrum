@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.spot.R;
@@ -85,7 +84,6 @@ public class LogListFragment extends Fragment {
 				ListView messagesListView = (ListView) rootView
 						.findViewById(R.id.message_list);
 				messagesListView.setAdapter(adapter);
-
 			}
 		}
 		final MessageLog messageLog = adapter.getItem(position);

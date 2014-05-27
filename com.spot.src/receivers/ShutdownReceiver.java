@@ -22,7 +22,7 @@ public class ShutdownReceiver extends BroadcastReceiver{
 		if(!isBatteryLow){
 			DataStoreHelper dataStoreHelper = new DataStoreHelper(
 					context);
-			ArrayList<Contact> contactList = dataStoreHelper.getShutdownNotificationEnabledContacts();
+			ArrayList<Contact> contactList = dataStoreHelper.getLowBatteryNotificationEnabledContacts();
 			
 			for(Contact contact:contactList) {
 			if (contact != null) {
