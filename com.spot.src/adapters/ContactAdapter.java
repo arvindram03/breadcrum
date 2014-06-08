@@ -67,7 +67,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 			holder.contactImage.setBackgroundResource(R.color.icon_bg);
 		}
 		if(contact.isShutdownNotificationEnabled()) {
-			holder.shutdownIcon.setColorFilter(Color.parseColor("#02798b"), Mode.MULTIPLY);
+			holder.shutdownIcon.setColorFilter(Color.parseColor("#bb0000"), Mode.MULTIPLY);
 		}
 		else {
 			holder.shutdownIcon.setColorFilter(Color.parseColor("#bbbbbb"), Mode.MULTIPLY);

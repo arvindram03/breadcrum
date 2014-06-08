@@ -5,9 +5,9 @@ import android.content.Context;
 import com.spot.R;
 
 public final class AnalyticsUtil {
-	private static final String MISSED_CALL_EVENT = "Missed Calls";
-	private static final String SHUTDOWN_EVENT = "Shutdowns";
-	public static final String SPOT_INSTALL = "Spot Install";
+	private static final String MISSED_CALL_EVENT = "Missed Call Messages";
+	private static final String LOW_BATTERY_EVENT = "Low Battery Messages";
+	public static final String SPOT_INSTALL = "Spot Installs";
 	
 	public static void logEvent(Context context, String baseMessage){
 		
@@ -17,14 +17,12 @@ public final class AnalyticsUtil {
 		if(baseMessage.equals(MessageUtil.MISSED_CALL_MESSAGE)) {
 			Countly.sharedInstance().recordEvent(MISSED_CALL_EVENT, 1);
 		}
-		else if(baseMessage.equals(MessageUtil.SHUTDOWN_MESSAGE)) {
-			Countly.sharedInstance().recordEvent(SHUTDOWN_EVENT, 1);
+		else if(baseMessage.equals(MessageUtil.BATTERY_LOW_MESSAGE)) {
+			Countly.sharedInstance().recordEvent(LOW_BATTERY_EVENT, 1);
 		}
 		else if(baseMessage.equals(SPOT_INSTALL)) {
 			Countly.sharedInstance().recordEvent(SPOT_INSTALL, 1);
 		}
-		Countly.sharedInstance().recordEvent(baseMessage, 1);
-		
 		Countly.sharedInstance().onStop();
 	}
 

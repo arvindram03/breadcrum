@@ -49,16 +49,20 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.spot.R;
+import com.suredigit.inappfeedback.FeedbackDialog;
+import com.suredigit.inappfeedback.FeedbackSettings;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener, LocationChangeNotifier {
@@ -120,17 +124,17 @@ public class MainActivity extends FragmentActivity implements
 		viewPager.setCurrentItem(NavigationUtil.getCurrentItem(
 				MainActivity.this, getIntent().getAction()));
 		
-		SharedPreferences sharedPreferences = getSharedPreferences(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY, Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = getSharedPreferences(SystemUtil.SHARED_PREFERENCE_KEY, Context.MODE_PRIVATE);
 		boolean isFirstTime = sharedPreferences.getBoolean(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY,true);
 		if(isFirstTime){
 			
 			AnalyticsUtil.logEvent(this, AnalyticsUtil.SPOT_INSTALL);
-			Toast.makeText(this, "first time", Toast.LENGTH_SHORT).show();
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putBoolean(SystemUtil.SHARED_PREFERENCE_FIRST_TIME_KEY, false);
 			editor.commit();
 			
 		}
+		
 	}
 
 	private Drawable getTabIcon(int position) {
@@ -196,6 +200,7 @@ public class MainActivity extends FragmentActivity implements
 							.getString(cursor
 									.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
 					phoneNumber = phoneNumber.replaceAll(" ", "");
+					phoneNumber = phoneNumber.replaceAll("-", "");
 					String name = cursor
 							.getString(cursor
 									.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -348,6 +353,35 @@ public class MainActivity extends FragmentActivity implements
 							}).setNegativeButton(android.R.string.no, null)
 					.show();
 
+			break;
+		case R.id.feedback:
+			
+			FeedbackSettings feedbackSettings = new FeedbackSettings();
+
+			feedbackSettings.setCancelButtonText("Cancel");
+			feedbackSettings.setSendButtonText("Send");
+
+			feedbackSettings.setText("How can we improve your experience ?");
+			feedbackSettings.setYourComments("Your Comments / Questions");
+			feedbackSettings.setTitle("We value your Feedback");
+
+			feedbackSettings.setToast("Thanks for your time. It means a lot to us");
+
+			feedbackSettings.setRadioButtons(false); 
+			feedbackSettings.setOrientation(LinearLayout.HORIZONTAL);
+			feedbackSettings.setGravity(Gravity.CENTER);
+
+			feedbackSettings.setReplyTitle("Response from Spot Team");
+			feedbackSettings.setReplyRateButtonText("Rate Us");
+			feedbackSettings.setReplyCloseButtonText("Close");
+			feedbackSettings.setModal(true);
+			
+
+			feedbackSettings.setDeveloperMessage("We need to value every Feedback. Send a quick and precise reply.");
+			
+			FeedbackDialog feedback;
+			feedback = new FeedbackDialog(this, getString(R.string.android_feedback_app_id), feedbackSettings);
+			feedback.show();
 			break;
 		}
 

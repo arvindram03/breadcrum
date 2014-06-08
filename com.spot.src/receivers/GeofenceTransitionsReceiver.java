@@ -42,7 +42,6 @@ public class GeofenceTransitionsReceiver extends BroadcastReceiver {
 	}
 
 	private void handleGeofenceTransition(Context context, Intent intent) {
-		//Toast.makeText(context, intent.getAction(), Toast.LENGTH_SHORT).show();
 	}
 
 	private void handleGeofenceError(Context context, Intent intent) {

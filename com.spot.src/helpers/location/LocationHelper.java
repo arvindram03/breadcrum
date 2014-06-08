@@ -6,10 +6,6 @@ import interfaces.LocationChangeNotifier;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-
 import models.UserPosition;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,7 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-public class LocationHelper implements LocationListener, ConnectionCallbacks, OnConnectionFailedListener  {
+public class LocationHelper implements LocationListener{
 	Context context;
 	public static final long MIN_TIME_BETWEEN_UPDATE = 0l;
 	public static final long MIN_DISTANCE_BETWEEN_UPDATE = 0l;
@@ -86,24 +82,6 @@ public class LocationHelper implements LocationListener, ConnectionCallbacks, On
 				"hh:mm a, dd MMM yy. ");
 		String dateFormat = simpleDateFormat.format(timestamp);
 		return dateFormat;
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult result) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDisconnected() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public boolean isLocationPresent(String locationDescription) {

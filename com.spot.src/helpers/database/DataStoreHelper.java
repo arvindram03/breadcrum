@@ -96,10 +96,9 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//		Log.d("upgrading database","adding new column");
-		String ADD_SHUTDOWN_NOTIFICATION_ICON = " ALTER TABLE "+TABLE_CONTACTS
+		String ADD_BATTERY_LOW_NOTIFICATION_FLAG = " ALTER TABLE "+TABLE_CONTACTS
 				+" ADD COLUMN "+ KEY_LOW_BATTERY_NOTIFICATION+" BOOLEAN DEFAULT 0";
-		db.execSQL(ADD_SHUTDOWN_NOTIFICATION_ICON);
+		db.execSQL(ADD_BATTERY_LOW_NOTIFICATION_FLAG);
 	}
 
 	public boolean addContact(Contact contact) {
@@ -424,7 +423,7 @@ public class DataStoreHelper extends SQLiteOpenHelper {
 		addMessageLog(messageLog);
 		
 		
-		String shutdownMessage = MessageUtil.SHUTDOWN_MESSAGE + " I am near"+address + linkContent;
+		String shutdownMessage = MessageUtil.BATTERY_LOW_MESSAGE + " I am near"+address + linkContent;
 		messageLog = new MessageLog("Mr. X  #batteryLow", "1234567890",
 				shutdownMessage, new Timestamp(now.getTime()));
 		

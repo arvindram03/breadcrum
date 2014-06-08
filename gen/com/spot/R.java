@@ -255,6 +255,7 @@ containing a value of this type.
         public static final int empty_contact_list=0x7f05000b;
         public static final int empty_location_list=0x7f05000f;
         public static final int empty_message_list=0x7f050013;
+        public static final int feedback=0x7f05001b;
         public static final int hybrid=0x7f050004;
         public static final int locationIcon=0x7f050010;
         public static final int location_description=0x7f050011;
@@ -290,6 +291,7 @@ containing a value of this type.
         public static final int menu=0x7f0a0001;
     }
     public static final class string {
+        public static final int android_feedback_app_id=0x7f060039;
         public static final int app_name=0x7f060029;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 

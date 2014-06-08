@@ -22,5 +22,10 @@
         android:orderInCategory="4"
         android:showAsAction="collapseActionView"
         android:title="Clear Contacts"/>
+    <item
+        android:id="@+id/feedback"
+        android:orderInCategory="5"
+        android:showAsAction="collapseActionView"
+        android:title="Feedback"/>
 
 </menu>
